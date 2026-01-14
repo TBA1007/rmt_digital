@@ -47,6 +47,7 @@
 
             const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
             
+            // Senarai murid (Pastikan nama kelas TEPAT seperti dalam butang pilihan)
             const rawStudents = [
                 { name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
@@ -115,19 +116,16 @@
                 { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" }
             ];
 
-            // Penambahbaikan ID: Trim dan Normalise untuk elak gagal trace
             const studentsWithIds = useMemo(() => 
-                rawStudents.map(s => ({ 
-                    ...s, 
-                    id: s.name.trim().replace(/\s+/g, '_').toLowerCase() 
-                }))
+                rawStudents.map(s => ({ ...s, id: s.name.trim().replace(/\s+/g, '_').toLowerCase() }))
             , []);
 
-            const attendanceStats = useMemo(() => {
+            // Statistik Kehadiran Keseluruhan
+            const globalStats = useMemo(() => {
                 const total = studentsWithIds.length;
                 const present = presentToday.length;
                 const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-                return { present, percent };
+                return { total, present, percent };
             }, [presentToday, studentsWithIds]);
 
             useEffect(() => {
@@ -183,6 +181,7 @@
 
             return (
                 <div className="min-h-screen pb-20">
+                    {/* HEADER DENGAN JUMLAH HADIR & PERATUS */}
                     <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
                         <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
                             <div className="flex items-center gap-3">
@@ -194,18 +193,18 @@
                             </div>
 
                             <div className="flex gap-4">
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
-                                    <p className="text-[9px] font-bold uppercase opacity-60">Hadir</p>
-                                    <p className="text-lg font-black text-orange-400 leading-none">{attendanceStats.present}</p>
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
+                                    <p className="text-[8px] font-bold uppercase opacity-60">Hadir Hari Ini</p>
+                                    <p className="text-lg font-black text-orange-400 leading-none">{globalStats.present} / {globalStats.total}</p>
                                 </div>
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
-                                    <p className="text-[9px] font-bold uppercase opacity-60">Peratus</p>
-                                    <p className="text-lg font-black text-green-400 leading-none">{attendanceStats.percent}%</p>
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
+                                    <p className="text-[8px] font-bold uppercase opacity-60">Peratus Hadir</p>
+                                    <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
                                 </div>
                             </div>
 
-                            <div className="hidden sm:block text-right">
-                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Tarikh</p>
+                            <div className="hidden md:block text-right">
+                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Waktu</p>
                                 <p className="text-sm font-bold">{time.toLocaleDateString('en-MY')}</p>
                             </div>
                         </div>
@@ -221,32 +220,51 @@
                             <p className="text-[10px] font-black text-gray-400 uppercase mb-3 text-center tracking-widest">Pilih Kelas</p>
                             <div className="flex flex-wrap justify-center gap-2">
                                 {classes.map(c => (
-                                    <button key={c} onClick={() => {setActiveClass(c); setSearchTerm('');}} className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}>{c}</button>
+                                    <button 
+                                        key={c} 
+                                        onClick={() => {setActiveClass(c); setSearchTerm('');}} 
+                                        className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}
+                                    >
+                                        {c}
+                                    </button>
                                 ))}
                             </div>
                         </div>
 
                         {view === 'attendance' ? (
                             <div className="no-print">
+                                <div className="mb-4 text-center">
+                                    <p className="text-xs font-bold text-gray-400 uppercase">Senarai Murid Kelas: <span className="text-[#002d5b]">{activeClass}</span></p>
+                                    <p className="text-[10px] text-gray-400 italic">({filteredStudents.length} orang murid ditemui)</p>
+                                </div>
                                 <div className="mb-6">
                                     <input type="text" placeholder="Cari nama murid..." className="w-full p-4 rounded-2xl border border-gray-100 shadow-sm text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {filteredStudents.map((s, idx) => {
-                                        const isPresent = presentToday.includes(s.id);
-                                        return (
-                                            <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`student-card p-4 rounded-2xl border-2 flex items-center justify-between ${isPresent ? 'bg-blue-50 border-blue-500 shadow-md' : 'bg-white border-transparent shadow-sm'}`}>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-[10px] font-bold text-gray-300 w-5">{idx + 1}</span>
-                                                    <p className={`text-xs font-extrabold uppercase leading-tight ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
+                                
+                                {filteredStudents.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        {filteredStudents.map((s, idx) => {
+                                            const isPresent = presentToday.includes(s.id);
+                                            return (
+                                                <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`student-card p-4 rounded-2xl border-2 flex items-center justify-between ${isPresent ? 'bg-blue-50 border-blue-500 shadow-md' : 'bg-white border-transparent shadow-sm'}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-[10px] font-bold text-gray-300 w-5">{idx + 1}</span>
+                                                        <p className={`text-xs font-extrabold uppercase leading-tight ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
+                                                    </div>
+                                                    <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all ${isPresent ? 'bg-blue-600 text-white' : 'bg-gray-100 text-transparent'}`}>✓</div>
                                                 </div>
-                                                <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all ${isPresent ? 'bg-blue-600 text-white' : 'bg-gray-100 text-transparent'}`}>✓</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+                                        <p className="text-gray-400 font-bold text-sm">Tiada data murid untuk kelas {activeClass}.</p>
+                                        <p className="text-[10px] text-gray-300">Sila masukkan senarai murid dalam kod untuk kelas ini.</p>
+                                    </div>
+                                )}
                             </div>
                         ) : (
+                            /* RUMUSAN VIEW */
                             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                                     <div className="text-center md:text-left">
