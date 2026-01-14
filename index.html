@@ -115,12 +115,19 @@
                 { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" }
             ];
 
+            // Penambahbaikan ID: Trim dan Normalise untuk elak gagal trace
             const studentsWithIds = useMemo(() => 
-                rawStudents.map(s => ({ ...s, id: s.name.replace(/\s+/g, '_').toLowerCase() }))
+                rawStudents.map(s => ({ 
+                    ...s, 
+                    id: s.name.trim().replace(/\s+/g, '_').toLowerCase() 
+                }))
             , []);
 
-            const attendancePercent = useMemo(() => {
-                return ((presentToday.length / studentsWithIds.length) * 100 || 0).toFixed(1);
+            const attendanceStats = useMemo(() => {
+                const total = studentsWithIds.length;
+                const present = presentToday.length;
+                const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+                return { present, percent };
             }, [presentToday, studentsWithIds]);
 
             useEffect(() => {
@@ -176,7 +183,6 @@
 
             return (
                 <div className="min-h-screen pb-20">
-                    {/* UPDATED HEADER WITH STATS */}
                     <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
                         <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
                             <div className="flex items-center gap-3">
@@ -188,42 +194,34 @@
                             </div>
 
                             <div className="flex gap-4">
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center">
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
                                     <p className="text-[9px] font-bold uppercase opacity-60">Hadir</p>
-                                    <p className="text-lg font-black text-orange-400 leading-none">{presentToday.length}</p>
+                                    <p className="text-lg font-black text-orange-400 leading-none">{attendanceStats.present}</p>
                                 </div>
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center">
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
                                     <p className="text-[9px] font-bold uppercase opacity-60">Peratus</p>
-                                    <p className="text-lg font-black text-green-400 leading-none">{attendancePercent}%</p>
+                                    <p className="text-lg font-black text-green-400 leading-none">{attendanceStats.percent}%</p>
                                 </div>
                             </div>
 
-                            <div className="hidden md:block text-right">
-                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Waktu</p>
+                            <div className="hidden sm:block text-right">
+                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Tarikh</p>
                                 <p className="text-sm font-bold">{time.toLocaleDateString('en-MY')}</p>
                             </div>
                         </div>
                     </header>
 
                     <main className="max-w-6xl mx-auto px-4 mt-6">
-                        {/* Tab Switcher */}
                         <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner">
                             <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>TANDA HADIR</button>
                             <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN</button>
                         </div>
 
-                        {/* Class Selector - Grid View */}
                         <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                             <p className="text-[10px] font-black text-gray-400 uppercase mb-3 text-center tracking-widest">Pilih Kelas</p>
                             <div className="flex flex-wrap justify-center gap-2">
                                 {classes.map(c => (
-                                    <button 
-                                        key={c} 
-                                        onClick={() => {setActiveClass(c); setSearchTerm('');}} 
-                                        className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}
-                                    >
-                                        {c}
-                                    </button>
+                                    <button key={c} onClick={() => {setActiveClass(c); setSearchTerm('');}} className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}>{c}</button>
                                 ))}
                             </div>
                         </div>
@@ -249,7 +247,6 @@
                                 </div>
                             </div>
                         ) : (
-                            /* RUMUSAN VIEW */
                             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                                     <div className="text-center md:text-left">
