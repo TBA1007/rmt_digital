@@ -461,32 +461,55 @@
                                             <th className="py-3 px-2 text-right">Status Hari Ini</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {filteredStudents.map((s, idx) => (
-                                            <tr key={s.id} className="border-b border-gray-50">
-                                                <td className="py-4 px-2 text-xs font-bold text-gray-300">{idx + 1}</td>
-                                                <td className="py-4 px-2 text-xs font-black text-[#002d5b] uppercase">{s.name}</td>
-                                                <td className="py-4 px-2 text-center">
-                                                    <span className="bg-blue-600 text-white px-3 py-1 rounded text-[10px] font-black">{monthlyStats[s.id] || 0} HARI</span>
-                                                </td>
-                                                <td className="py-4 px-2 text-right">
-                                                    {selectedMonth === currentMonthKey ? (
-                                                        presentToday.includes(s.id) ? <span className="text-green-500 font-bold text-[9px]">HADIR</span> : <span className="text-red-400 font-bold text-[9px]">TIADA</span>
-                                                    ) : <span className="text-gray-300 text-[9px]">TAMAT</span>}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                   <tbody>
+                                        {filteredStudents.map((s, idx) => {
+                                            const isPresentToday = presentToday.includes(s.id);
+                                            const monthlyCount = monthlyStats[s.id] || 0;
+                                            return (
+                                                <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                                                    <td className="py-4 px-2 text-xs font-bold text-gray-300">{idx + 1}</td>
+                                                    <td className="py-4 px-2 text-[11px] font-black text-blue-900 uppercase">{s.name}</td>
+                                                    <td className="py-4 px-2 text-center">
+                                                        <span className="bg-orange-100 text-orange-700 py-1 px-3 rounded-full text-[10px] font-black">
+                                                            {monthlyCount} HARI
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-4 px-2 text-right">
+                                                        {isPresentToday ? 
+                                                            <span className="text-green-500 font-black text-[10px]">HADIR</span> : 
+                                                            <span className="text-red-300 font-bold text-[10px]">TIADA</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     )}
                 </main>
+
+                <footer className="no-print fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-[#002d5b] text-white py-4 px-6 rounded-2xl shadow-2xl flex justify-between items-center border border-white/20">
+                    <div className="flex flex-col">
+                        <span className="text-[8px] font-bold opacity-50 uppercase tracking-tighter">Tarikh Hari Ini</span>
+                        <span className="text-xs font-black">{new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    </div>
+                    <div className="h-8 w-[1px] bg-white/10"></div>
+                    <div className="text-right">
+                        <span className="text-[8px] font-bold opacity-50 uppercase tracking-tighter">Status Server</span>
+                        <div className="flex items-center gap-2 justify-end">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span className="text-xs font-black italic">SISTEM AKTIF</span>
+                        </div>
+                    </div>
+                </footer>
             </div>
         );
     };
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-</script>
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
 </body>
 </html>
