@@ -268,8 +268,7 @@
             { name: "NUR MUHAMMAD HANNAN BIN HARDY HELMI", class: "2 ARR" },
             { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
             { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
-        ];
-const studentsWithIds = students.map((s, index) => ({
+        ];const studentsWithIds = students.map((s, index) => ({
     ...s,
     id: `std_${index}_${s.name.replace(/\s+/g, '_')}` // Creates a unique ID
 }));
