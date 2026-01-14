@@ -137,6 +137,40 @@
                 { id: 93, name: "NUR ALEEYA QAISARA BINTI ZAINUDIN", class: "3 ANR" },
                 { id: 94, name: "NUR ALYA ADRIANA BINTI SHAHIRAN", class: "3 ANR" },
                 { id: 95, name: "NUR FARAH NABILA BINTI MOHAMAD SAFUAN", class: "3 ANR" },
+                { id: 96, name: "NUR HUMAIRA BINTI MOHAMMAD FAKHRULRAZI", class: "3 ANR" },
+                { id: 97, name: "NUR RAUDHAH BINTI ASWADI", class: "3 ANR" },
+                { id: 98, name: "WAN MUHAMMAD SYARIFUDDIN BIN WAN ABDUL MANAN", class: "3 ANR" },
+                { id: 99, name: "AHMAD SYAQIL HAIDAR BIN AHMAD SYAHRIN", class: "3 ARR" },
+                { id: 100, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "3 ARR" },
+                { id: 101, name: "AHMAD ZIYAD AMZAR BIN ZAMRI", class: "3 ARR" },
+                { id: 102, name: "AHMAD ZIYAD FARISH BIN AHMAD FADLY", class: "3 ARR" },
+                { id: 103, name: "AHLAMI KHAIRA BINTI MOHD KHAIRI", class: "3 ARR" },
+                { id: 104, name: "AHMAD KHUZAIRI BIN MAHADZIR", class: "3 ARR" },
+                { id: 105, name: "AMNI SYIFA' BINTI MUHAMMAD NUR ARIF", class: "3 ARR" },
+                { id: 106, name: "MUHAMMAD ARYAN ADHA BIN MAHADI", class: "3 ARR" },
+                { id: 107, name: "MUHAMMAD HAIDAR BIN MAHADZIR", class: "3 ARR" },
+                { id: 108, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "3 ARR" },
+                { id: 109, name: "MUHAMMAD HARITH BIN MOHD SHAMSOL", class: "3 ARR" },
+                { id: 110, name: "MUHAMMAD HAZIQ HAIKAL BIN CHE MAT SOKRI", class: "3 ARR" },
+                { id: 111, name: "NUR AMNA IRDINA BINTI MOHAMAD SHUKUR", class: "3 ARR" },
+                { id: 112, name: "NUR AZRA QAISARA BINTI ABDUL HALIM", class: "3 ARR" },
+                { id: 113, name: "NUR DHIYA QAISARA BINTI MOHD KHAIDZIR", class: "3 ARR" },
+                { id: 114, name: "SITI KHADIJAH BINTI ABDULLAH", class: "3 ARR" },
+                { id: 115, name: "WAN NUR QAISARA AMANI BINTI WAN MOHD SHAHRIL", class: "3 ARR" },
+                { id: 116, name: "WAN NUR QAISARA BALQIS BINTI WAN ABDUL MANAN", class: "3 ARR" },
+                { id: 117, name: "AHMAD SYARIF BIN ASWADI", class: "2 AFQ" },
+                { id: 118, name: "AUNI ADLINA BINTI MOHAMMAD ROSIDI", class: "2 AFQ" },
+                { id: 119, name: "AUNI BATRISYIA BINTI MOHD ZAKI", class: "2 AFQ" },
+                { id: 120, name: "FATIMAH AZ ZAHRA BINTI HASBULLAH", class: "2 AFQ" },
+                { id: 121, name: "HAIFFA HANA BINTI MOHD HANIF", class: "2 AFQ" },
+                { id: 122, name: "MEDINA BINTI MUHAMMAD NUR ARIF", class: "2 AFQ" },
+                { id: 123, name: "MUHAMMAD AFIF HARIZ BIN MOHD AMRAN", class: "2 AFQ" },
+                { id: 124, name: "MUHAMMAD AIMAN NAJMI BIN ABDULLAH", class: "2 AFQ" },
+                { id: 125, name: "MUHAMMAD AMMAR AZFAR BIN AZIZUL", class: "2 AFQ" },
+                { id: 126, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "2 AFQ" },
+                { id: 127, name: "MUHAMMAD NA'IL DANISH BIN ROSLAN", class: "2 AFQ" },
+                { id: 128, name: "NUR FATIHAH BINTI MOHAMMAD ADHA", class: "2 AFQ" },
+                { id: 129, name: "NUR HAURA HUMAIRA BINTI ZAINUDIN", class: "2 AFQ" },
                 { id: 130, name: "AQEEL ARSYAD BIN ABD RAHMAN", class: "2 ANR" },
                 { id: 131, name: "CHE WAN NUR NAIRA FATIHAH BINTI CHE WAN SUFLI RATMAN", class: "2 ANR" },
                 { id: 132, name: "DAMIANA SOFIA BINTI ZAKARIA", class: "2 ANR" },
@@ -254,3 +288,69 @@
             const filtered = students.filter(s => 
                 s.class === activeClass &&
                 s.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            return (
+                <div className="min-h-screen">
+                    <div className="glass-header text-white p-6 pb-10 shadow-lg rounded-b-[40px] text-center sticky top-0 z-50">
+                        <h1 className="text-2xl font-black tracking-tighter">RMT DIGITAL</h1>
+                        <p className="text-[10px] font-bold opacity-70 uppercase tracking-widest mt-1">SK KAMPUNG NIYUR</p>
+                        <div className="mt-4 flex gap-2 justify-center">
+                            <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/30 text-xs font-bold">
+                                HADIR: {presentToday.length} / {students.length}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-md mx-auto px-4 -mt-6">
+                        <input 
+                            type="text" 
+                            placeholder="Cari nama murid..." 
+                            className="w-full p-4 rounded-3xl shadow-xl border-none focus:ring-2 focus:ring-blue-500 outline-none text-gray-700 font-bold mb-4"
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+
+                        <div className="flex overflow-x-auto gap-2 no-scrollbar mb-6 pb-2">
+                            {classes.map(c => (
+                                <button 
+                                    key={c}
+                                    onClick={() => setActiveClass(c)}
+                                    className={`px-5 py-2 rounded-full whitespace-nowrap text-[10px] font-black uppercase transition-all ${
+                                        activeClass === c ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100'
+                                    }`}
+                                >
+                                    {c}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="space-y-3 pb-24">
+                            {filtered.map(s => (
+                                <div key={s.id} className="student-card bg-white p-4 rounded-3xl shadow-sm flex justify-between items-center">
+                                    <div className="flex-1 pr-3">
+                                        <h3 className="text-[11px] font-bold text-gray-800 uppercase leading-tight">{s.name}</h3>
+                                        <p className="text-[9px] font-black text-blue-500 mt-1">{s.class}</p>
+                                    </div>
+                                    <button 
+                                        onClick={() => toggle(s.id)}
+                                        className={`w-24 py-3 rounded-2xl font-black text-[10px] transition-all ${
+                                            presentToday.includes(s.id) 
+                                            ? 'bg-green-500 text-white shadow-green-100 shadow-lg' 
+                                            : 'bg-gray-100 text-gray-400'
+                                        }`}
+                                    >
+                                        {presentToday.includes(s.id) ? 'HADIR ✓' : 'TANDA'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
