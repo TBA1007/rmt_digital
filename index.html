@@ -1,53 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PENGURUSAN RMT SKIOR 2026</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .canvas-header { background-color: #002d5b; border-bottom: 5px solid #ff7a00; }
-        .student-card { transition: all 0.2s ease; cursor: pointer; }
-        .student-card:active { transform: scale(0.97); }
-        @media print { .no-print { display: none !important; } }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PENGURUSAN RMT SKIOR 2026</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .canvas-header { background-color: #002d5b; border-bottom: 5px solid #ff7a00; }
+        .student-card { transition: all 0.2s ease; cursor: pointer; }
+        .student-card:active { transform: scale(0.97); }
+        @media print { .no-print { display: none !important; } }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+   <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
-            authDomain: "rmt-digital-8df83.firebaseapp.com",
-            projectId: "rmt-digital-8df83",
-            storageBucket: "rmt-digital-8df83.firebasestorage.app",
-            messagingSenderId: "161720627010",
-            appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
+        authDomain: "rmt-digital-8df83.firebaseapp.com",
+        projectId: "rmt-digital-8df83",
+        storageBucket: "rmt-digital-8df83.firebasestorage.app",
+        messagingSenderId: "161720627010",
+        appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
+    };
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        const App = () => {
-            const [view, setView] = useState('attendance');
-            const [activeClass, setActiveClass] = useState('PPKI');
-            const [presentToday, setPresentToday] = useState([]);
-            const [monthlyStats, setMonthlyStats] = useState({});
-            const [searchTerm, setSearchTerm] = useState('');
-            const time = new Date();
+  const App = () => {
+        const [view, setView] = useState('attendance');
+        const [activeClass, setActiveClass] = useState('PPKI');
+        const [presentToday, setPresentToday] = useState([]);
+        const [monthlyStats, setMonthlyStats] = useState({});
+        const [searchTerm, setSearchTerm] = useState('');
+        
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const currentMonthKey = todayStr.substring(0, 7);
+        
+        const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
 
-            const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
-            
-            const rawStudents = [
+        const monthOptions = useMemo(() => {
+            const options = [];
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const val = d.toISOString().substring(0, 7);
+                const label = d.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
+                options.push({ val, label });
+            }
+            return options;
+        }, []);
+
+        const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
+        
+        const rawStudents = [
                 // DATA PPKI
                 { name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
@@ -279,194 +295,198 @@
                 { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
                 { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
             ];
+        const studentsWithIds = useMemo(() => 
+            rawStudents.map(s => ({ 
+                ...s, 
+                id: s.name.trim().replace(/\s+/g, '_').toLowerCase() 
+            }))
+        , []);
 
-            const studentsWithIds = useMemo(() => 
-                rawStudents.map(s => ({ ...s, id: s.name.trim().replace(/\s+/g, '_').toLowerCase() }))
-            , []);
+        const globalStats = useMemo(() => {
+            const total = studentsWithIds.length;
+            const present = presentToday.length;
+            const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+            return { total, present, percent };
+        }, [presentToday, studentsWithIds]);
 
-            const globalStats = useMemo(() => {
-                const total = studentsWithIds.length;
-                const present = presentToday.length;
-                const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-                return { total, present, percent };
-            }, [presentToday, studentsWithIds]);
+        useEffect(() => {
+            const unsub = db.collection('daily_attendance').doc(todayStr)
+                .onSnapshot(doc => {
+                    if (doc.exists) {
+                        setPresentToday(doc.data().students || []);
+                    } else {
+                        setPresentToday([]);
+                    }
+                });
+            return () => unsub();
+        }, [todayStr]);
 
-            useEffect(() => {
-                const today = new Date().toISOString().split('T')[0];
-                const unsub = db.collection('daily_attendance').doc(today)
-                    .onSnapshot(doc => {
-                        if (doc.exists) setPresentToday(doc.data().students || []);
-                        else setPresentToday([]);
+        useEffect(() => {
+            if (view === 'summary') {
+                const unsub = db.collection('daily_attendance')
+                    .where(firebase.firestore.FieldPath.documentId(), '>=', `${selectedMonth}-01`)
+                    .where(firebase.firestore.FieldPath.documentId(), '<=', `${selectedMonth}-31`)
+                    .onSnapshot(snapshot => {
+                        const counts = {};
+                        snapshot.forEach(doc => {
+                            const students = doc.data().students || [];
+                            students.forEach(id => {
+                                counts[id] = (counts[id] || 0) + 1;
+                            });
+                        });
+                        setMonthlyStats(counts);
                     });
                 return () => unsub();
-            }, []);
+            }
+        }, [view, selectedMonth]);
 
-            useEffect(() => {
-                if (view === 'summary') {
-                    const currentMonth = new Date().toISOString().substring(0, 7);
-                    db.collection('daily_attendance')
-                        .where(firebase.firestore.FieldPath.documentId(), '>=', `${currentMonth}-01`)
-                        .where(firebase.firestore.FieldPath.documentId(), '<=', `${currentMonth}-31`)
-                        .get()
-                        .then(snapshot => {
-                            const counts = {};
-                            snapshot.forEach(doc => {
-                                const students = doc.data().students || [];
-                                students.forEach(id => {
-                                    counts[id] = (counts[id] || 0) + 1;
-                                });
-                            });
-                            setMonthlyStats(counts);
-                        });
-                }
-            }, [view]);
-
-            const toggleAttendance = async (studentId) => {
-                const today = new Date().toISOString().split('T')[0];
-                const docRef = db.collection('daily_attendance').doc(today);
-                const isPresent = presentToday.includes(studentId);
-                try {
-                    await docRef.set({
-                        students: isPresent 
-                            ? firebase.firestore.FieldValue.arrayRemove(studentId)
-                            : firebase.firestore.FieldValue.arrayUnion(studentId),
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                } catch (err) { console.error(err); }
-            };
-
-            const filteredStudents = useMemo(() => {
-                return studentsWithIds.filter(s => 
-                    s.class.trim().toUpperCase() === activeClass.trim().toUpperCase() && 
-                    s.name.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-            }, [activeClass, studentsWithIds, searchTerm]);
-
-            return (
-                <div className="min-h-screen pb-20">
-                    <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
-                        <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-xl text-xl shadow-inner">🥣</div>
-                                <div>
-                                    <h1 className="text-lg font-black uppercase tracking-tight leading-none">RMT SKIOR</h1>
-                                    <p className="text-[9px] font-bold text-orange-400 uppercase tracking-widest mt-1">Digital 2026</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
-                                    <p className="text-[8px] font-bold uppercase opacity-60">Hadir Hari Ini</p>
-                                    <p className="text-lg font-black text-orange-400 leading-none">{globalStats.present} / {globalStats.total}</p>
-                                </div>
-                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
-                                    <p className="text-[8px] font-bold uppercase opacity-60">Peratus Hadir</p>
-                                    <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    <main className="max-w-6xl mx-auto px-4 mt-6">
-                        <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner">
-                            <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>TANDA HADIR</button>
-                            <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN</button>
-                        </div>
-
-                        <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <p className="text-[10px] font-black text-gray-400 uppercase mb-3 text-center tracking-widest">Pilih Kelas</p>
-                            <div className="flex flex-wrap justify-center gap-2">
-                                {classes.map(c => (
-                                    <button 
-                                        key={c} 
-                                        onClick={() => {setActiveClass(c); setSearchTerm('');}} 
-                                        className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}
-                                    >
-                                        {c}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {view === 'attendance' ? (
-                            <div className="no-print">
-                                <div className="mb-4 text-center">
-                                    <p className="text-xs font-bold text-gray-400 uppercase">Senarai Murid Kelas: <span className="text-[#002d5b]">{activeClass}</span></p>
-                                    <p className="text-[10px] text-gray-400 italic">({filteredStudents.length} orang murid ditemui)</p>
-                                </div>
-                                <div className="mb-6">
-                                    <input type="text" placeholder="Cari nama murid..." className="w-full p-4 rounded-2xl border border-gray-100 shadow-sm text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                                </div>
-                                
-                                {filteredStudents.length > 0 ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                        {filteredStudents.map((s, idx) => {
-                                            const isPresent = presentToday.includes(s.id);
-                                            return (
-                                                <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`student-card p-4 rounded-2xl border-2 flex items-center justify-between ${isPresent ? 'bg-blue-50 border-blue-500 shadow-md' : 'bg-white border-transparent shadow-sm'}`}>
-                                                    <div className="flex items-center gap-3">
-                                                        <span className="text-[10px] font-bold text-gray-300 w-5">{idx + 1}</span>
-                                                        <p className={`text-xs font-extrabold uppercase leading-tight ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
-                                                    </div>
-                                                    <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all ${isPresent ? 'bg-blue-600 text-white' : 'bg-gray-100 text-transparent'}`}>✓</div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
-                                        <p className="text-gray-400 font-bold text-sm">Tiada data murid untuk kelas {activeClass}.</p>
-                                        <p className="text-[10px] text-gray-300">Sila semak semula ejaan nama kelas atau baki murid tahun 1 belum dimasukkan.</p>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                                    <div className="text-center md:text-left">
-                                        <h2 className="text-xl font-black text-[#002d5b] uppercase">Rumusan Bulanan</h2>
-                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">KELAS: {activeClass} | {new Intl.DateTimeFormat('ms-MY', { month: 'long', year: 'numeric' }).format(time)}</p>
-                                    </div>
-                                    <button onClick={() => window.print()} className="no-print px-6 py-3 bg-black text-white rounded-xl text-[10px] font-black hover:opacity-80 transition-all shadow-lg">🖨️ CETAK LAPORAN</button>
-                                </div>
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-left">
-                                        <thead>
-                                            <tr className="border-b-2 border-gray-50 text-[10px] font-black text-gray-400 uppercase">
-                                                <th className="py-4 px-2">Bil</th>
-                                                <th className="py-4 px-2">Nama Murid</th>
-                                                <th className="py-4 px-2 text-center">Kehadiran Sebulan</th>
-                                                <th className="py-4 px-2 text-right">Hari Ini</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {filteredStudents.map((s, idx) => (
-                                                <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50">
-                                                    <td className="py-4 px-2 text-xs font-bold text-gray-300">{idx + 1}</td>
-                                                    <td className="py-4 px-2 text-xs font-black text-[#002d5b] uppercase">{s.name}</td>
-                                                    <td className="py-4 px-2 text-center">
-                                                        <span className="bg-blue-600 text-white px-4 py-1 rounded-lg text-xs font-black">
-                                                            {monthlyStats[s.id] || 0} HARI
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-4 px-2 text-right">
-                                                        {presentToday.includes(s.id) ? 
-                                                            <span className="text-green-500 font-bold text-[10px]">HADIR</span> : 
-                                                            <span className="text-red-400 font-bold text-[10px]">TIADA</span>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        )}
-                    </main>
-                </div>
-            );
+        const toggleAttendance = async (studentId) => {
+            const docRef = db.collection('daily_attendance').doc(todayStr);
+            const isPresent = presentToday.includes(studentId);
+            try {
+                await docRef.set({
+                    students: isPresent 
+                        ? firebase.firestore.FieldValue.arrayRemove(studentId)
+                        : firebase.firestore.FieldValue.arrayUnion(studentId),
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                    date: todayStr
+                }, { merge: true });
+            } catch (err) { console.error("Error:", err); }
         };
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+
+        const exportToCSV = () => {
+            const headers = ["Bil", "Nama Murid", "Kelas", `Jumlah Hadir (${selectedMonth})`];
+            const rows = filteredStudents.map((s, idx) => [
+                idx + 1,
+                s.name,
+                s.class,
+                monthlyStats[s.id] || 0
+            ]);
+            const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Laporan_RMT_${activeClass}_${selectedMonth}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        const filteredStudents = useMemo(() => {
+            return studentsWithIds.filter(s => 
+                s.class.trim() === activeClass && 
+                s.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }, [activeClass, studentsWithIds, searchTerm]);
+
+        return (
+            <div className="min-h-screen pb-20">
+                <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
+                    <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-white p-2 rounded-xl text-xl">🥣</div>
+                            <div>
+                                <h1 className="text-lg font-black uppercase leading-none">RMT SKIOR</h1>
+                                <p className="text-[9px] font-bold text-orange-400 tracking-widest mt-1">SISTEM KEHADIRAN DIGITAL</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-4">
+                            <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
+                                <p className="text-[8px] font-bold uppercase opacity-60">Hadir Hari Ini</p>
+                                <p className="text-lg font-black text-orange-400 leading-none">{globalStats.present} / {globalStats.total}</p>
+                            </div>
+                            <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
+                                <p className="text-[8px] font-bold uppercase opacity-60">Peratus</p>
+                                <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="max-w-6xl mx-auto px-4 mt-6">
+                    <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner">
+                        <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>TANDA HADIR</button>
+                        <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN & SEJARAH</button>
+                    </div>
+
+                    <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="flex flex-wrap justify-center gap-2 mb-4">
+                            {classes.map(c => (
+                                <button key={c} onClick={() => setActiveClass(c)} className={`px-3 py-2 rounded-lg text-[10px] font-black border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-50 text-gray-400'}`}>{c}</button>
+                            ))}
+                        </div>
+                        <input type="text" placeholder="Cari nama murid..." className="w-full p-4 rounded-xl border border-gray-100 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    </div>
+
+                    {view === 'attendance' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {filteredStudents.map((s, idx) => {
+                                const isPresent = presentToday.includes(s.id);
+                                return (
+                                    <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${isPresent ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent shadow-sm'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-[10px] font-bold text-gray-300 w-5">{idx + 1}</span>
+                                            <p className={`text-xs font-extrabold uppercase ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
+                                        </div>
+                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isPresent ? 'bg-blue-600 text-white' : 'bg-gray-100 text-transparent'}`}>✓</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                                <div>
+                                    <h2 className="text-xl font-black text-[#002d5b]">RUMUSAN KEHADIRAN</h2>
+                                    <div className="flex items-center gap-2 mt-2 no-print">
+                                        <label className="text-[10px] font-bold text-gray-400 uppercase">Pilih Bulan:</label>
+                                        <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="bg-gray-100 border-none rounded-lg px-3 py-1 text-xs font-bold text-blue-700">
+                                            {monthOptions.map(opt => <option key={opt.val} value={opt.val}>{opt.label}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 no-print">
+                                    <button onClick={exportToCSV} className="px-5 py-2 bg-green-600 text-white rounded-lg text-[10px] font-black hover:bg-green-700 transition-all shadow-md flex items-center gap-2">📊 MUAT TURUN EXCEL</button>
+                                    <button onClick={() => window.print()} className="px-5 py-2 bg-black text-white rounded-lg text-[10px] font-black hover:opacity-80 transition-all shadow-md">🖨️ CETAK LAPORAN</button>
+                                </div>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="border-b text-[10px] font-black text-gray-400 uppercase text-left">
+                                            <th className="py-3 px-2">Bil</th>
+                                            <th className="py-3 px-2">Nama Murid</th>
+                                            <th className="py-3 px-2 text-center">Kehadiran ({selectedMonth})</th>
+                                            <th className="py-3 px-2 text-right">Status Hari Ini</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredStudents.map((s, idx) => (
+                                            <tr key={s.id} className="border-b border-gray-50">
+                                                <td className="py-4 px-2 text-xs font-bold text-gray-300">{idx + 1}</td>
+                                                <td className="py-4 px-2 text-xs font-black text-[#002d5b] uppercase">{s.name}</td>
+                                                <td className="py-4 px-2 text-center">
+                                                    <span className="bg-blue-600 text-white px-3 py-1 rounded text-[10px] font-black">{monthlyStats[s.id] || 0} HARI</span>
+                                                </td>
+                                                <td className="py-4 px-2 text-right">
+                                                    {selectedMonth === currentMonthKey ? (
+                                                        presentToday.includes(s.id) ? <span className="text-green-500 font-bold text-[9px]">HADIR</span> : <span className="text-red-400 font-bold text-[9px]">TIADA</span>
+                                                    ) : <span className="text-gray-300 text-[9px]">TAMAT</span>}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+                </main>
+            </div>
+        );
+    };
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+</script>
 </body>
 </html>
