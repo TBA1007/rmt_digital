@@ -47,8 +47,8 @@
 
             const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
             
-            // Senarai murid (Pastikan nama kelas TEPAT seperti dalam butang pilihan)
             const rawStudents = [
+                // DATA PPKI
                 { name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
                 { name: "WAN SHAFIY BENJAMIN BIN WAN MOHD HAFIZULLAH", class: "PPKI" },
@@ -82,8 +82,10 @@
                 { name: "NUR QAIREEN QAISARA BINTI MUHAMMAD", class: "PPKI" },
                 { name: "PUTRA RAYYAN MIKAIL BIN NOR RAJU", class: "PPKI" },
                 { name: "RIZQI ASHRAF BIN IZMEER", class: "PPKI" },
+
+                // DATA TAHUN 6
                 { name: "NUR ARFA NADRAH BINTI MOHD DASUKI", class: "6 AFT" },
-                { name: "WAN NUR IRDINA ZULAIKHA BINTI DARO", class: "6 AFT" },
+                { name: "WAN NUR IRDINA ZULAIKHA BINTI MOHD HAIKAL", class: "6 AFT" },
                 { name: "AR RAYYAN FAWWAZ BIN AIDIL PUTRA", class: "6 AFQ" },
                 { name: "CHE WAN NUR AINA ZAFIRAH BINTI CHE WAN ZULKIFLI", class: "6 AFQ" },
                 { name: "MUHAMMAD AMMAR BIN AHMAD JAMARI", class: "6 AFQ" },
@@ -113,14 +115,175 @@
                 { name: "MUHAMMAD QAUSAR FIQRI BIN MOHAMAD", class: "6 ARR" },
                 { name: "NUR AIERIS ILYANA BINTI NORAZMAN", class: "6 ARR" },
                 { name: "NUR AIMY SAFIYYA BINTI AHMAD FAIZAL", class: "6 ARR" },
-                { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" }
+                { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" },
+
+                // DATA TAHUN 5
+                { name: "MUHAMMAD ALIF KAMIL BIN MOKTAR", class: "5 AFT" },
+                { name: "MUHAMMAD IMAN AQIL BIN ABDUL RAHMAN", class: "5 AFT" },
+                { name: "NUR AIN NURUL SHAHADAH BINTI JAFFAR", class: "5 AFT" },
+                { name: "NUR AMEERA SYAKIRA BINTI ISMAIL", class: "5 AFT" },
+                { name: "NUR QAYLA FAKHIRA BINTI ZAKARIA", class: "5 AFT" },
+                { name: "NUR SYAFIQAH BINTI SHAMSUL", class: "5 AFT" },
+                { name: "CHE WAN MUAMMAR MUHAIMIN BIN CHE WAN SUFLI RATMAN", class: "5 AFQ" },
+                { name: "MUHAMMAD HARAZZ HAKEEM BIN MOHD SALUSI", class: "5 AFQ" },
+                { name: "NUR AFZA IMANINA BINTI CHE KAMARUDIN", class: "5 AFQ" },
+                { name: "NUR ALISSA BALQIS BINTI MOHD SHAHFULRIZAN", class: "5 AFQ" },
+                { name: "NUR DELISHA QAIRA BINTI ABD RAHMAN", class: "5 AFQ" },
+                { name: "NUR FATHIAH BINTI MUHAMAD FAIZAL", class: "5 AFQ" },
+                { name: "NUR SYAZA HUMAIRA BINTI SULAIMAN", class: "5 AFQ" },
+                { name: "PUTERI NURAISYA RANIA BINTI MOHD AZELAN", class: "5 AFQ" },
+                { name: "SITI NURNADHIRA BINTI MOHD NURHADI @ MUHAMMAD NAQIB", class: "5 AFQ" },
+                { name: "AHMAD ZACKHERY BIN MOKHZANI MIZAN", class: "5 ANR" },
+                { name: "MUHAMAD AQIL LUTHFY BIN MUHAMAD HAFIZ", class: "5 ANR" },
+                { name: "MUHAMMAD AQMAR AIMAN BIN MOHD.RADUAN", class: "5 ANR" },
+                { name: "MUHAMMAD FAWWAZ AMSYAR BIN MOHD YATIM", class: "5 ANR" },
+                { name: "MUHAMMAD SYAHMI BIN MOHD ZAILANI", class: "5 ANR" },
+                { name: "MUHAMMAD ZIKRY BIN MOHD JOHARI", class: "5 ANR" },
+                { name: "NUR AFINA UMAIRA BINTI AMIRULLAH", class: "5 ANR" },
+                { name: "NUR AIFA IRMANINA BINTI NORAZMAN", class: "5 ANR" },
+                { name: "NUR ALEESYA ELVINA BINTI NOORZIHAN", class: "5 ANR" },
+                { name: "NUR EMYZA WIDYANA BINTI ABDULLAH", class: "5 ANR" },
+                { name: "NURJANNAH AFRINA BINTI NORFAIZA", class: "5 ANR" },
+                { name: "NURUL ADYRA AZZAHRA BINTI MOHD HISYAM", class: "5 ANR" },
+                { name: "SYAZRIL BIN SAIFULLAH", class: "5 ANR" },
+                { name: "AHMAD PUTRA FAIZ BIN AHMAD FAIZAL", class: "5 ARR" },
+                { name: "ANNUR PUTRI AQILAH BINTI AHMAD ZAKI", class: "5 ARR" },
+                { name: "MOHAMAD LUTFI HAKIM BIN MOHD AZUAN", class: "5 ARR" },
+                { name: "MUHAMAD AMMAR ASHWAD BIN SUHAIMI", class: "5 ARR" },
+                { name: "MUHAMAD IRFAN MURSIDI BIN BAHARUDIN", class: "5 ARR" },
+                { name: "MUHAMAD RAMDAN RIZQI BIN HASRORIZAL", class: "5 ARR" },
+                { name: "MUHAMMAD LUTFI FAKHRULLAH BIN MUHAMAD ALHAFIS", class: "5 ARR" },
+                { name: "MUHAMMAD SYAH MUIZZ BIN IDRIS", class: "5 ARR" },
+                { name: "NIK NUR HUMAIRA BINTI NIK AZLAN", class: "5 ARR" },
+                { name: "NUR AISYA UMAIRAH BINTI ABDUL HAFIZ", class: "5 ARR" },
+                { name: "NUR FAZLIATUL AQIRRA BINTI YACCUB", class: "5 ARR" },
+                { name: "NUR HUSNA HUMAYRAA BINTI MOHD NASRI", class: "5 ARR" },
+                { name: "NUR ZULAIKHA SYAHIRAH BINTI ZAHARI", class: "5 ARR" },
+                { name: "NURIN DAMIA ALISYA BINTI MOHD IDZUAN", class: "5 ARR" },
+                { name: "TUAN NABIL NAJMIL BIN TUAN KAMARUL AZIZAN", class: "5 ARR" },
+
+                // DATA TAHUN 4
+                { name: "CHE NUR AINA NADHIRA BINTI CHE SAUFI", class: "4 AFT" },
+                { name: "HASNA QHAIRIYAH BINTI MOHAMAD RAHIMI", class: "4 AFT" },
+                { name: "MUHAMMAD FIRAS NAUFAL BIN ROSLI", class: "4 AFT" },
+                { name: "MUHAMMAD NAQIB SYAWAL HAFIY BIN MOHD KHAIRUDIN", class: "4 AFT" },
+                { name: "MUHAMMAD WAFIY ADHA BIN MAWARDI", class: "4 AFT" },
+                { name: "NAZIRAH AFINA ZAHIRA BINTI ABDUL AZIZ", class: "4 AFT" },
+                { name: "NUR AWATIF IRDINA BINTI ABDUL MANAF", class: "4 AFT" },
+                { name: "NUR RANIA ALISHA BINTI ABD RANI", class: "4 AFT" },
+                { name: "NUR SYASYA ARIANA BINTI SHAHRUL RIDHZUAN", class: "4 AFT" },
+                { name: "TUAN IRENE ARDINI BINTI TUAN AFIF", class: "4 AFT" },
+                { name: "AISH QUSYAIRI BIN AZIAN", class: "4 AFQ" },
+                { name: "DHIA NURAISYAH SAFIYYA BINTI MOHD FAIZOL", class: "4 AFQ" },
+                { name: "MUHAMMAD ADAM IQRAM BIN AHMAD AL-HAFIZ", class: "4 AFQ" },
+                { name: "MUHAMMAD IMAAN A'IZUDDIN BIN MOHD NASRULLAH", class: "4 AFQ" },
+                { name: "MUHAMMAD SHAHRUL NIDZMAN BIN BADROL HISHAM", class: "4 AFQ" },
+                { name: "NUR ALESHA QAISARA BINTI MOHD ZULADERA", class: "4 AFQ" },
+                { name: "NUR ARISSA SUMMAYAH BINTI MOHD SAFUWAN FATIHI", class: "4 AFQ" },
+                { name: "NUR DELISHA ADELIA BINTI MOHAMAD EZRI", class: "4 AFQ" },
+                { name: "NUR FASHA HUMAYRAA BINTI MOHD ZAINAL", class: "4 AFQ" },
+                { name: "NUR SYAFIA BINTI AHMAD FAIZA", class: "4 AFQ" },
+                { name: "PUTRI LARA ELYSHA BINTI MOHD SHARIFF", class: "4 AFQ" },
+                { name: "CHE MUHAMMAD IZZAT HARIS BIN CHE SAUFI", class: "4 ANR" },
+                { name: "MAISARAH BINTI FAUZI", class: "4 ANR" },
+                { name: "MOHAMAD ALIF AR'SYAD BIN MOHD AZLAN", class: "4 ANR" },
+                { name: "MUHAMMAD AL AMIN FIKRI BIN MOHD ASKOZI", class: "4 ANR" },
+                { name: "MUHAMMAD AMMAR HARIZ BIN MOHD FAIZ", class: "4 ANR" },
+                { name: "MUHAMMAD FAKRUL RAZI BIN MOHD ABI RAFDI", class: "4 ANR" },
+                { name: "MUHAMMAD NUR FAKRULLAH BIN HARDY RAFFI", class: "4 ANR" },
+                { name: "MUHAMMAD SHAUQI ILLIAS BIN MOHD SALMAN", class: "4 ANR" },
+                { name: "MUHAMMAD YUSOF NAUFAL BIN MOHD ANUAR", class: "4 ANR" },
+                { name: "NOR AUNI ADELIA BINTI AZLI", class: "4 ANR" },
+                { name: "NUR A'ISYAH BINTI MOHAMAD BUDIN", class: "4 ANR" },
+                { name: "NUR AMANI FARHA BINTI MUHAMMAD HASSAN", class: "4 ANR" },
+                { name: "NUR AMEERAH RAYHANAH BINTI AMIR HAMZAH", class: "4 ANR" },
+                { name: "NUR NAJLA HUMAIRA BINTI LAILATU AKMAL", class: "4 ANR" },
+                { name: "NUR SAFIYA ALISYA BINTI BIDIN", class: "4 ANR" },
+                { name: "NUR SYAZA HANNANI BINTI SULAIMAN", class: "4 ANR" },
+                { name: "SYAKIRA BATRISYA BINTI AHMAD NIZAM", class: "4 ANR" },
+                { name: "WAN NUR SYARIFAH NAJIHAH BINTI WAN SHAIRUL SUHAIMIN", class: "4 ANR" },
+
+                // DATA TAHUN 3
+                { name: "AULIA IZZATUNNISA BINTI AHMAD HADYAN", class: "3 AFT" },
+                { name: "CHE WAN NUR HAZWANA BINTI CHE WAN OSMAN", class: "3 AFT" },
+                { name: "MUHAMMAD AMMAR BIN AHMAD FAIZA", class: "3 AFT" },
+                { name: "MUHAMMAD ZIYAD ZAKWAN BIN ZAMRI", class: "3 AFT" },
+                { name: "WAN MUHAMMAD AMMAR BIN WAN MOHD HAIKAL", class: "3 AFT" },
+                { name: "IZZ HADIF BIN AFFANDI", class: "3 AFQ" },
+                { name: "MUHAMMAD 'AKIF KHALISH BIN MUHAMAD ZAHIRUDDIN", class: "3 AFQ" },
+                { name: "MUHAMMAD ABID RAZIN BIN ROSMAN", class: "3 AFQ" },
+                { name: "MUHAMMAD AQASHAF BIN HARDY SAKHA", class: "3 AFQ" },
+                { name: "MUHAMMAD ASFA SYAFIQ BIN SHAMSUL", class: "3 AFQ" },
+                { name: "MUHAMMAD KHALISH ZAFRAN BIN HARDY AMIRUL", class: "3 AFQ" },
+                { name: "NAZHAN HADIF BIN ZAKARIA", class: "3 AFQ" },
+                { name: "NOR FATIHAH BINTI SUKRI", class: "3 AFQ" },
+                { name: "TUAN IRENE AMMARA BINTI TUAN AFIF", class: "3 AFQ" },
+                { name: "AZ ZAHRA ABISHA BINTI AIDIL PUTRA VIJAYARAGAVAN SELVARAJ", class: "3 ANR" },
+                { name: "IFFAT NUR JANNAH BINTI MOKHZANI MIZAN", class: "3 ANR" },
+                { name: "MUHAMMAD RAYHAN AKIF BIN HARDY SAIFULIZAN", class: "3 ANR" },
+                { name: "MOHAMMAD RAYYAN IMAN BIN ABDUL HAFIZ", class: "3 ANR" },
+                { name: "MUHAMMAD ZAYYAN ABQARI BIN MOHAMAD", class: "3 ANR" },
+                { name: "NUR AIRIS SYAKEELA BINTI AHMAD FAIZAL", class: "3 ANR" },
+                { name: "NUR ALEEYA ZAHRA BINTI HARDY SHAHIFULRIZAN", class: "3 ANR" },
+                { name: "NUR JANNATUL SAFIYA BINTI NORFAIZA", class: "3 ANR" },
+                { name: "SITI MARYAM BINTI HARDY SULAIMAN", class: "3 ANR" },
+                { name: "AHMAD ADHAM ARIF BIN AHMAD KHARULDIN", class: "3 ARR" },
+                { name: "AISYAH HUMAIRAH BINTI SAIFULLAH", class: "3 ARR" },
+                { name: "MUHAMAD HARITH HAKIM BIN ISMAIL", class: "3 ARR" },
+                { name: "MUHAMAD IKHWAN ADHA BIN BAHARUDIN", class: "3 ARR" },
+                { name: "MUHAMMAD ADAM RAFFI BIN ZAINURDDIN", class: "3 ARR" },
+                { name: "MUHAMMAD ADIB NAUFAL BIN HARDY DASUKI", class: "3 ARR" },
+                { name: "MUHAMMAD DZAKWAN ANAQI BIN AHMAD", class: "3 ARR" },
+                { name: "MUHAMMAD FARISH IZZUDDIN BIN HARDY ZAINAL", class: "3 ARR" },
+                { name: "MUHAMMAD IRFAN HAQIMI BIN MUHAIDI", class: "3 ARR" },
+                { name: "MUHAMMAD LUTH FIRDAUS BIN ABDULLAH", class: "3 ARR" },
+                { name: "NUR AAIRA ARISSA BINTI AMIRULLAH", class: "3 ARR" },
+                { name: "NUR AIRA ASSYIFA BINTI MUSTAFFA KAMAL", class: "3 ARR" },
+                { name: "RANIATU JANNA BINTI SAKERI", class: "3 ARR" },
+                { name: "ROSE ELENA EMMALIYN BINTI ALANG ISKANDAR", class: "3 ARR" },
+                { name: "WAN NUR AYRA IMANI BINTI WAN HARDY ARIF AFDAH", class: "3 ARR" },
+
+                // DATA TAHUN 2
+                { name: "MUHAMMAD AARIZ ZAKIR BIN FAIZOL", class: "2 AFT" },
+                { name: "MUHAMMAD AQIL BIN HARDY FAIZOL", class: "2 AFQ" },
+                { name: "MUHAMMAD FAKHRUL HAKIMI BIN MUHAMAD FAIZAL", class: "2 AFQ" },
+                { name: "AQEEL ARSYAD BIN ABD RAHMAN", class: "2 ANR" },
+                { name: "CHE WAN NUR NAIRA FATIHAH BINTI CHE WAN SUFLI RATMAN", class: "2 ANR" },
+                { name: "DAMIANA SOFIA BINTI ZAKARIA", class: "2 ANR" },
+                { name: "DHIA KHADEEJA BINTI HANAFFI", class: "2 ANR" },
+                { name: "LUTH QAMAR BIN AHMAD KHAIRUL", class: "2 ANR" },
+                { name: "MUHAMMAD AIDIL SYAWALUDIN BIN CHE", class: "2 ANR" },
+                { name: "MUHAMMAD AIRELL TESA BIN HARDY IZWAN", class: "2 ANR" },
+                { name: "MUHAMMAD AQIL ANAQI BIN ABDUL JABAR", class: "2 ANR" },
+                { name: "MUHAMMAD DANISH HAFIZI BIN HARDY IDZUAN", class: "2 ANR" },
+                { name: "MUHAMMAD FAHIM NASRUDDIN BIN MUHAMAD FAIS", class: "2 ANR" },
+                { name: "MUHAMMAD HAKIM BIN ABDUL HADI", class: "2 ANR" },
+                { name: "MUHAMMAD HARIS BIN HARDY NURHADI @ MUHAMMAD NAQIB", class: "2 ANR" },
+                { name: "NUR AIRIS NAFEESA BINTI HARDY YASSIN", class: "2 ANR" },
+                { name: "NUR FATIHAH NABILA BINTI MUHAMAD FAIS", class: "2 ANR" },
+                { name: "NUR QAISARA IMANI BINTI AMIRYUSOF SHUKRI", class: "2 ANR" },
+                { name: "AHMAD ZUFIQA BIN SUHAMESI @ SUHAMIZI", class: "2 ARR" },
+                { name: "AQEEB RAYYAN BIN NOOR AFSYAM RIZZUAN", class: "2 ARR" },
+                { name: "MUHAMMAD ADWA FAYYAD BIN AFIF FARHAN", class: "2 ARR" },
+                { name: "MUHAMMAD ASHRAF HUZAIRI BIN ABDULLAH", class: "2 ARR" },
+                { name: "MUHAMMAD HAFIZ AR RAYYAN BIN MUHAMMAD HASSAN", class: "2 ARR" },
+                { name: "MUHAMMAD NOR HARRAZ BIN HARDY NOOR", class: "2 ARR" },
+                { name: "MUHAMMAD NUR AIDIL ZIKRY BIN HARDY RAFFI", class: "2 ARR" },
+                { name: "MUHAMMAD WARITH ADAM BIN HARDY HISYAM", class: "2 ARR" },
+                { name: "MUHAMMAD WAZIF ASYRAF BIN MAWARDI", class: "2 ARR" },
+                { name: "NUR AMMARA AYUNI BINTI SUHAIMI", class: "2 ARR" },
+                { name: "NUR ASYA AR'MINA BINTI HARDY AZLAN", class: "2 ARR" },
+                { name: "NUR ATIRA HUMAIRA BINTI HARDY RASHIMAN", class: "2 ARR" },
+                { name: "NUR DINARA YUSRINA BINTI MOHAMAD EZRI", class: "2 ARR" },
+                { name: "NUR MUHAMMAD HANNAN BIN HARDY HELMI", class: "2 ARR" },
+                { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
+                { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
             ];
 
             const studentsWithIds = useMemo(() => 
                 rawStudents.map(s => ({ ...s, id: s.name.trim().replace(/\s+/g, '_').toLowerCase() }))
             , []);
 
-            // Statistik Kehadiran Keseluruhan
             const globalStats = useMemo(() => {
                 const total = studentsWithIds.length;
                 const present = presentToday.length;
@@ -174,14 +337,13 @@
 
             const filteredStudents = useMemo(() => {
                 return studentsWithIds.filter(s => 
-                    s.class === activeClass && 
+                    s.class.trim().toUpperCase() === activeClass.trim().toUpperCase() && 
                     s.name.toLowerCase().includes(searchTerm.toLowerCase())
                 );
             }, [activeClass, studentsWithIds, searchTerm]);
 
             return (
                 <div className="min-h-screen pb-20">
-                    {/* HEADER DENGAN JUMLAH HADIR & PERATUS */}
                     <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
                         <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
                             <div className="flex items-center gap-3">
@@ -191,7 +353,6 @@
                                     <p className="text-[9px] font-bold text-orange-400 uppercase tracking-widest mt-1">Digital 2026</p>
                                 </div>
                             </div>
-
                             <div className="flex gap-4">
                                 <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
                                     <p className="text-[8px] font-bold uppercase opacity-60">Hadir Hari Ini</p>
@@ -202,11 +363,6 @@
                                     <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
                                 </div>
                             </div>
-
-                            <div className="hidden md:block text-right">
-                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Waktu</p>
-                                <p className="text-sm font-bold">{time.toLocaleDateString('en-MY')}</p>
-                            </div>
                         </div>
                     </header>
 
@@ -216,7 +372,7 @@
                             <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN</button>
                         </div>
 
-                        <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             <p className="text-[10px] font-black text-gray-400 uppercase mb-3 text-center tracking-widest">Pilih Kelas</p>
                             <div className="flex flex-wrap justify-center gap-2">
                                 {classes.map(c => (
@@ -259,12 +415,11 @@
                                 ) : (
                                     <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
                                         <p className="text-gray-400 font-bold text-sm">Tiada data murid untuk kelas {activeClass}.</p>
-                                        <p className="text-[10px] text-gray-300">Sila masukkan senarai murid dalam kod untuk kelas ini.</p>
+                                        <p className="text-[10px] text-gray-300">Sila semak semula ejaan nama kelas atau baki murid tahun 1 belum dimasukkan.</p>
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            /* RUMUSAN VIEW */
                             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                                     <div className="text-center md:text-left">
