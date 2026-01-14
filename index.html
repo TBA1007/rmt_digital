@@ -82,7 +82,7 @@
                 { name: "PUTRA RAYYAN MIKAIL BIN NOR RAJU", class: "PPKI" },
                 { name: "RIZQI ASHRAF BIN IZMEER", class: "PPKI" },
                 { name: "NUR ARFA NADRAH BINTI MOHD DASUKI", class: "6 AFT" },
-                { name: "WAN NUR IRDINA ZULAIKHA BINTI MOHD HAIKAL", class: "6 AFT" },
+                { name: "WAN NUR IRDINA ZULAIKHA BINTI DARO", class: "6 AFT" },
                 { name: "AR RAYYAN FAWWAZ BIN AIDIL PUTRA", class: "6 AFQ" },
                 { name: "CHE WAN NUR AINA ZAFIRAH BINTI CHE WAN ZULKIFLI", class: "6 AFQ" },
                 { name: "MUHAMMAD AMMAR BIN AHMAD JAMARI", class: "6 AFQ" },
@@ -119,7 +119,10 @@
                 rawStudents.map(s => ({ ...s, id: s.name.replace(/\s+/g, '_').toLowerCase() }))
             , []);
 
-            // 1. Fetch Today's Attendance
+            const attendancePercent = useMemo(() => {
+                return ((presentToday.length / studentsWithIds.length) * 100 || 0).toFixed(1);
+            }, [presentToday, studentsWithIds]);
+
             useEffect(() => {
                 const today = new Date().toISOString().split('T')[0];
                 const unsub = db.collection('daily_attendance').doc(today)
@@ -130,10 +133,9 @@
                 return () => unsub();
             }, []);
 
-            // 2. Fetch Monthly Stats for Summary
             useEffect(() => {
                 if (view === 'summary') {
-                    const currentMonth = new Date().toISOString().substring(0, 7); // "2026-01"
+                    const currentMonth = new Date().toISOString().substring(0, 7);
                     db.collection('daily_attendance')
                         .where(firebase.firestore.FieldPath.documentId(), '>=', `${currentMonth}-01`)
                         .where(firebase.firestore.FieldPath.documentId(), '<=', `${currentMonth}-31`)
@@ -174,38 +176,51 @@
 
             return (
                 <div className="min-h-screen pb-20">
-                    <header className="canvas-header text-white p-6 shadow-xl no-print">
-                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                    {/* UPDATED HEADER WITH STATS */}
+                    <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-xl text-2xl">🥣</div>
+                                <div className="bg-white p-2 rounded-xl text-xl shadow-inner">🥣</div>
                                 <div>
-                                    <h1 className="text-xl font-extrabold uppercase tracking-tight leading-none">PENGURUSAN RMT SKIOR</h1>
-                                    <p className="text-[10px] font-bold text-orange-400 uppercase tracking-widest mt-1">Sistem Digital 2026</p>
+                                    <h1 className="text-lg font-black uppercase tracking-tight leading-none">RMT SKIOR</h1>
+                                    <p className="text-[9px] font-bold text-orange-400 uppercase tracking-widest mt-1">Digital 2026</p>
                                 </div>
                             </div>
-                            <div className="text-center font-bold">
-                                <p className="text-[10px] opacity-60 uppercase tracking-widest">Tarikh Hari Ini</p>
-                                <p className="text-lg">{time.toLocaleDateString('en-MY', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+
+                            <div className="flex gap-4">
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center">
+                                    <p className="text-[9px] font-bold uppercase opacity-60">Hadir</p>
+                                    <p className="text-lg font-black text-orange-400 leading-none">{presentToday.length}</p>
+                                </div>
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center">
+                                    <p className="text-[9px] font-bold uppercase opacity-60">Peratus</p>
+                                    <p className="text-lg font-black text-green-400 leading-none">{attendancePercent}%</p>
+                                </div>
+                            </div>
+
+                            <div className="hidden md:block text-right">
+                                <p className="text-[9px] font-bold opacity-60 uppercase tracking-widest">Waktu</p>
+                                <p className="text-sm font-bold">{time.toLocaleDateString('en-MY')}</p>
                             </div>
                         </div>
                     </header>
 
-                    <main className="max-w-6xl mx-auto px-4 mt-8">
+                    <main className="max-w-6xl mx-auto px-4 mt-6">
                         {/* Tab Switcher */}
-                        <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-8 no-print max-w-md mx-auto">
+                        <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner">
                             <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>TANDA HADIR</button>
-                            <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN BULANAN</button>
+                            <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN</button>
                         </div>
 
-                        {/* Class Selector - FIXED GRID VIEW */}
-                        <div className="no-print mb-8">
+                        {/* Class Selector - Grid View */}
+                        <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                             <p className="text-[10px] font-black text-gray-400 uppercase mb-3 text-center tracking-widest">Pilih Kelas</p>
                             <div className="flex flex-wrap justify-center gap-2">
                                 {classes.map(c => (
                                     <button 
                                         key={c} 
                                         onClick={() => {setActiveClass(c); setSearchTerm('');}} 
-                                        className={`px-4 py-2 rounded-lg text-[10px] font-bold transition-all border ${activeClass === c ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-gray-500 border-gray-100'}`}
+                                        className={`px-3 py-2 rounded-lg text-[10px] font-black transition-all border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:bg-gray-100'}`}
                                     >
                                         {c}
                                     </button>
@@ -234,12 +249,12 @@
                                 </div>
                             </div>
                         ) : (
-                            /* RUMUSAN BULANAN VIEW */
+                            /* RUMUSAN VIEW */
                             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                                     <div className="text-center md:text-left">
-                                        <h2 className="text-xl font-black text-[#002d5b] uppercase">Rumusan Kehadiran Bulanan</h2>
-                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">KELAS: {activeClass} | BULAN: {new Intl.DateTimeFormat('ms-MY', { month: 'long', year: 'numeric' }).format(time)}</p>
+                                        <h2 className="text-xl font-black text-[#002d5b] uppercase">Rumusan Bulanan</h2>
+                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">KELAS: {activeClass} | {new Intl.DateTimeFormat('ms-MY', { month: 'long', year: 'numeric' }).format(time)}</p>
                                     </div>
                                     <button onClick={() => window.print()} className="no-print px-6 py-3 bg-black text-white rounded-xl text-[10px] font-black hover:opacity-80 transition-all shadow-lg">🖨️ CETAK LAPORAN</button>
                                 </div>
@@ -249,8 +264,8 @@
                                             <tr className="border-b-2 border-gray-50 text-[10px] font-black text-gray-400 uppercase">
                                                 <th className="py-4 px-2">Bil</th>
                                                 <th className="py-4 px-2">Nama Murid</th>
-                                                <th className="py-4 px-2 text-center">Jumlah Hari Hadir (Bulan Ini)</th>
-                                                <th className="py-4 px-2 text-right">Status Hari Ini</th>
+                                                <th className="py-4 px-2 text-center">Kehadiran Sebulan</th>
+                                                <th className="py-4 px-2 text-right">Hari Ini</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -265,7 +280,7 @@
                                                     </td>
                                                     <td className="py-4 px-2 text-right">
                                                         {presentToday.includes(s.id) ? 
-                                                            <span className="text-green-500 font-bold text-[10px]">HADIR HARI INI</span> : 
+                                                            <span className="text-green-500 font-bold text-[10px]">HADIR</span> : 
                                                             <span className="text-red-400 font-bold text-[10px]">TIADA</span>
                                                         }
                                                     </td>
@@ -273,9 +288,6 @@
                                             ))}
                                         </tbody>
                                     </table>
-                                </div>
-                                <div className="mt-8 pt-8 border-t border-dashed border-gray-200 text-center text-[10px] font-bold text-gray-400 uppercase">
-                                    Laporan ini dijana secara automatik oleh Sistem RMT Digital SKIOR 2026
                                 </div>
                             </div>
                         )}
