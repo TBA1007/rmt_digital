@@ -22,33 +22,31 @@
 <body>
     <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+    const { useState, useEffect, useMemo } = React;
 
-        // 1. FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
-            authDomain: "rmt-digital-8df83.firebaseapp.com",
-            projectId: "rmt-digital-8df83",
-            storageBucket: "rmt-digital-8df83.firebasestorage.app",
-            messagingSenderId: "161720627010",
-            appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
-        };
+// 1. FIREBASE CONFIG (Kept as provided)
+const firebaseConfig = {
+    apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
+    authDomain: "rmt-digital-8df83.firebaseapp.com",
+    projectId: "rmt-digital-8df83",
+    storageBucket: "rmt-digital-8df83.firebasestorage.app",
+    messagingSenderId: "161720627010",
+    appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
+};
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-        const App = () => {
-            const [view, setView] = useState('attendance');
-            const [activeClass, setActiveClass] = useState('PPKI');
-            const [presentToday, setPresentToday] = useState([]);
-            const [time, setTime] = useState(new Date());
+const App = () => {
+    const [view, setView] = useState('attendance');
+    const [activeClass, setActiveClass] = useState('PPKI');
+    const [presentToday, setPresentToday] = useState([]);
+    const [time, setTime] = useState(new Date());
 
-            // 2. DATA
-            const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
-            
-            // Add your full list of students here
-            const students = [
+    // 2. DATA WITH AUTO-GENERATED IDs
+    const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
+    
+    const rawStudents = [
             { name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
             { name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
             { name: "WAN SHAFIY BENJAMIN BIN WAN MOHD HAFIZULLAH", class: "PPKI" },
@@ -269,38 +267,40 @@
             { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
             { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
         ];
-            const studentsWithIds = students.map((s, index) => ({
-    ...s,
-    id: `std_${index}_${s.name.replace(/\s+/g, '_')}` // Creates a unique ID
-}));
-            // 3. EFFECTS (Sync with Firebase)
-            useEffect(() => {
-                const timer = setInterval(() => setTime(new Date()), 1000);
-                const today = new Date().toISOString().split('T')[0];
-                
-                const unsub = db.collection('daily_attendance').doc(today)
-                    .onSnapshot(doc => {
-                        if (doc.exists) setPresentToday(doc.data().students || []);
-                    });
-                return () => { clearInterval(timer); unsub(); };
-            }, []);
+             const students = useMemo(() => rawStudents.map((s, i) => ({...s, id: `s-${i}`})), []);
 
-            const toggleAttendance = async (id) => {
-                const today = new Date().toISOString().split('T')[0];
-                const docRef = db.collection('daily_attendance').doc(today);
-                const isPresent = presentToday.includes(id);
-                
-                await docRef.set({
-                    students: isPresent 
-                        ? firebase.firestore.FieldValue.arrayRemove(id)
-                        : firebase.firestore.FieldValue.arrayUnion(id)
-                }, { merge: true });
-            };
+    // 3. EFFECTS
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000);
+        const today = new Date().toISOString().split('T')[0];
+        
+        const unsub = db.collection('daily_attendance').doc(today)
+            .onSnapshot(doc => {
+                if (doc.exists) setPresentToday(doc.data().students || []);
+                else setPresentToday([]);
+            });
+        return () => { clearInterval(timer); unsub(); };
+    }, []);
 
-            const filteredStudents = useMemo(() => 
-                students.filter(s => s.class === activeClass), 
-            [activeClass]);
+    const toggleAttendance = async (id) => {
+        const today = new Date().toISOString().split('T')[0];
+        const docRef = db.collection('daily_attendance').doc(today);
+        const isPresent = presentToday.includes(id);
+        
+        try {
+            await docRef.set({
+                students: isPresent 
+                    ? firebase.firestore.FieldValue.arrayRemove(id)
+                    : firebase.firestore.FieldValue.arrayUnion(id)
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error updating attendance:", error);
+        }
+    };
 
+    const filteredStudents = useMemo(() => 
+        students.filter(s => s.class === activeClass), 
+    [activeClass, students]);
             return (
                 <div className="min-h-screen">
                     <header className="canvas-header text-white p-6 shadow-xl">
