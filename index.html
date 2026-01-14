@@ -17,10 +17,9 @@
         .stat-card { background: white; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
         .card-accent-blue { border-left: 6px solid #3b82f6; }
         .card-accent-orange { border-left: 6px solid #ff7a00; }
-        .btn-portal { background-color: #ff7a00; transition: all 0.2s; }
+        .btn-portal { background-color: #ff7a00; transition: all 0.2s; color: white; }
         .btn-portal:hover { background-color: #e66e00; transform: translateY(-2px); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .table-header { background-color: #002d5b; color: white; border-radius: 24px 24px 0 0; }
         .summary-card { background: #002d5b; border-radius: 24px; color: white; }
     </style>
 </head>
@@ -64,108 +63,114 @@
                 { id: 2, name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
                 { id: 3, name: "WAN SHAFIY BENJAMIN BIN WAN MOHD HAFIZULLAH", class: "PPKI" },
                 { id: 4, name: "AHMAD ZIYAD AMZAR BIN ZAMRI", class: "PPKI" },
+                { id: 5, name: "CHE NOR ASHIF BIN CHE MAT SOKRI", class: "PPKI" },
+                { id: 6, name: "ISKANDAR ZAMAKHSHARY BIN ISKANDAR ZULKARNAIN", class: "PPKI" },
+                { id: 7, name: "MUHAMMAD ADAM TAUFIQILLAH BIN MOHD FAIZAL", class: "PPKI" },
+                { id: 8, name: "MUHAMMAD AQEEL NAUFAL BIN MOHD AZELAN", class: "PPKI" },
+                { id: 9, name: "MUHAMMAD FIRAS DANISH BIN ABDUL HALIM", class: "PPKI" },
+                { id: 10, name: "MUHAMMAD IFFAT NAFIS BIN MOHD IKHWAN NAIM", class: "PPKI" },
+                { id: 11, name: "NUR ADZRAA QAIREENA BINTI AHMAD ZAKRI", class: "PPKI" },
+                { id: 12, name: "UFAIRA NUR AFIFA BINTI MOHD HAFIZAN", class: "PPKI" },
+                { id: 13, name: "ARWA BINTI ABDUL WAHAB", class: "PPKI" },
+                { id: 14, name: "MUHAMAD RAZIQ BIN SOBRI SALAEH", class: "PPKI" },
+                { id: 15, name: "MUHAMMAD AQIL ZIQRI BIN JUNAIDI", class: "PPKI" },
+                { id: 16, name: "NUR ASMA IMANI BINTI ABDULLAH", class: "PPKI" },
+                { id: 17, name: "NUR HAZIRAHUDA BINTI GHAZALI", class: "PPKI" },
+                { id: 18, name: "NUR IMAN BINTI AHMAD ZAMURI", class: "PPKI" },
+                { id: 19, name: "ADNIN AMIRAH IRDINA BINTI ZAMRI", class: "PPKI" },
+                { id: 20, name: "CHE NUR ARISSA ZAHRA BINTI CHE MAT SOKRI", class: "PPKI" },
+                { id: 21, name: "MUHAMMAD ADAM BIN ABDUL JALIL", class: "PPKI" },
+                { id: 22, name: "MUHAMMAD AIMAN BIN ABDUL JALIL", class: "PPKI" },
+                { id: 23, name: "MUHAMMAD HADIF BIN MAHADZIR", class: "PPKI" },
+                { id: 24, name: "NUR FAIHA BINTI ABDULLAH", class: "PPKI" },
+                { id: 25, name: "NUR SYAZA ADRIANA BINTI SHAHIRAN", class: "PPKI" },
+                { id: 26, name: "AHMAD SYAQIL HAIDAR BIN AHMAD SYAHRIN", class: "1 AFQ" },
+                { id: 27, name: "AHMAD SYARIF BIN ASWADI", class: "1 AFQ" },
+                { id: 28, name: "AUNI ADLINA BINTI MOHAMMAD ROSIDI", class: "1 AFQ" },
+                { id: 29, name: "AUNI BATRISYIA BINTI MOHD ZAKI", class: "1 AFQ" },
+                { id: 30, name: "FATIMAH AZ ZAHRA BINTI HASBULLAH", class: "1 AFQ" },
                 { id: 31, name: "HAIFFA HANA BINTI MOHD HANIF", class: "1 AFQ" },
-                // Add all other 219 students here following this format
-            ], []);
-
-            const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
-
-            const toggle = async (id) => {
-                const today = new Date().toISOString().split('T')[0];
-                const docRef = db.collection('daily_attendance').doc(today);
-                await docRef.set({
-                    students: presentToday.includes(id) 
-                        ? firebase.firestore.FieldValue.arrayRemove(id)
-                        : firebase.firestore.FieldValue.arrayUnion(id)
-                }, { merge: true });
-            };
-
-            const stats = {
-                present: presentToday.length,
-                total: 219, // Fixed total based on your screenshot
-                percent: ((presentToday.length / 219) * 100).toFixed(1)
-            };
-
-            return (
-                <div className="min-h-screen pb-20">
-                    {/* HEADER WITH CLOCK & PORTAL BUTTON */}
-                    <header className="canvas-header text-white p-6 shadow-2xl">
-                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-white p-3 rounded-2xl">
-                                    <span className="text-3xl">🥣</span>
-                                </div>
-                                <div>
-                                    <h1 className="text-xl font-black uppercase tracking-tight">Pengurusan RMT SKKN</h1>
-                                    <p className="text-[10px] font-bold text-orange-400">SISTEM KEHADIRAN DIGITAL 2026</p>
-                                </div>
-                            </div>
-
-                            <div className="text-center md:text-center">
-                                <p className="text-[10px] font-bold opacity-60 uppercase">Masa & Tarikh</p>
-                                <p className="text-lg font-black tracking-tighter">
-                                    {currentTime.toLocaleTimeString('en-GB')} | {currentTime.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' })}
-                                </p>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="text-right mr-2">
-                                    <p className="text-[9px] font-bold opacity-60 uppercase">Jumlah Murid</p>
-                                    <p className="text-2xl font-black">219</p>
-                                </div>
-                                <a href="https://appsjohor.moe.gov.my/rmt/" target="_blank" className="btn-portal px-5 py-3 rounded-xl font-black text-[10px] flex items-center gap-2 shadow-lg">
-                                    <span>🌐</span> PORTAL E-RMT
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-
-                    <main className="max-w-6xl mx-auto px-4 mt-8">
-                        {/* MAIN STATS */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                            <div className="stat-card card-accent-blue p-6 flex justify-between items-center">
-                                <div>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase">Hadir Hari Ini</p>
-                                    <p className="text-4xl font-black text-[#002d5b]">{stats.present}</p>
-                                </div>
-                                <div className="text-2xl opacity-20">👥</div>
-                            </div>
-                            <div className="stat-card card-accent-orange p-6 flex justify-between items-center">
-                                <div>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase">Peratus Kehadiran</p>
-                                    <p className="text-4xl font-black text-[#ff7a00]">{stats.percent}%</p>
-                                </div>
-                                <div className="text-2xl opacity-20">%</div>
-                            </div>
-                            <div className="bg-gray-200/50 p-1.5 rounded-[24px] flex gap-2">
-                                <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-2xl font-black text-[10px] transition-all ${view === 'attendance' ? 'bg-[#002d5b] text-white shadow-lg' : 'text-gray-500'}`}>TANDA KEHADIRAN</button>
-                                <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-2xl font-black text-[10px] transition-all ${view === 'summary' ? 'bg-[#002d5b] text-white shadow-lg' : 'text-gray-500'}`}>RUMUSAN BULANAN</button>
-                            </div>
-                        </div>
-
-                        {view === 'attendance' ? (
-                            <div className="animate-fadeIn">
-                                <input type="text" placeholder="Cari nama murid..." className="w-full p-4 bg-white rounded-2xl shadow-sm border-none focus:ring-2 focus:ring-[#002d5b] outline-none font-bold text-gray-700 mb-6" onChange={(e) => setSearchTerm(e.target.value)} />
-                                <div className="flex overflow-x-auto gap-2 no-scrollbar mb-6">
-                                    {classes.map(c => (
-                                        <button key={c} onClick={() => setActiveClass(c)} className={`px-6 py-2 rounded-xl whitespace-nowrap text-[10px] font-black transition-all ${activeClass === c ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-400 border border-gray-100'}`}>{c}</button>
-                                    ))}
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {students.filter(s => s.class === activeClass && s.name.toLowerCase().includes(searchTerm.toLowerCase())).map(s => (
-                                        <div key={s.id} className="bg-white p-4 rounded-2xl shadow-sm flex justify-between items-center border border-gray-50">
-                                            <div>
-                                                <h3 className="text-[10px] font-black text-gray-800 uppercase">{s.name}</h3>
-                                                <span className="text-[8px] font-bold text-blue-500 bg-blue-50 px-2 py-0.5 rounded uppercase mt-1 inline-block">{s.class}</span>
-                                            </div>
-                                            <button onClick={() => toggle(s.id)} className={`px-5 py-2.5 rounded-xl font-black text-[10px] transition-all ${presentToday.includes(s.id) ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                                {presentToday.includes(s.id) ? 'HADIR ✓' : 'TANDA'}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="animate-slideUp">
-                                <div className="summary-card p-8 mb-0 shadow-2xl relative overflow-hidden">
-                                    <div className="relative z-10 flex justify-between items-end">
+                { id: 32, name: "MEDINA BINTI MUHAMMAD NUR ARIF", class: "1 AFQ" },
+                { id: 33, name: "MUHAMMAD AFIF HARIZ BIN MOHD AMRAN", class: "1 AFQ" },
+                { id: 34, name: "MUHAMMAD AIMAN NAJMI BIN ABDULLAH", class: "1 AFQ" },
+                { id: 35, name: "MUHAMMAD AMMAR AZFAR BIN AZIZUL", class: "1 AFQ" },
+                { id: 36, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "1 AFQ" },
+                { id: 37, name: "MUHAMMAD NA'IL DANISH BIN ROSLAN", class: "1 AFQ" },
+                { id: 38, name: "NUR FATIHAH BINTI MOHAMMAD ADHA", class: "1 AFQ" },
+                { id: 39, name: "NUR HAURA HUMAIRA BINTI ZAINUDIN", class: "1 AFQ" },
+                { id: 40, name: "SITI NURJANNAH BINTI SHAFIAI", class: "1 AFQ" },
+                { id: 41, name: "WAN MUHAMMAD SYARIFUDDIN BIN WAN MOHD SAUFI", class: "1 AFQ" },
+                { id: 42, name: "ZARA ZULAIKHA BINTI MUHAMMAD FARIS", class: "1 AFQ" },
+                { id: 43, name: "MOHAMAD ARYAN RIFQI BIN MOHAMAD ROZI", class: "1 AFQ" },
+                { id: 44, name: "AHLAMI KHAIRA BINTI MOHD KHAIRI", class: "1 AFQ" },
+                { id: 45, name: "AHMAD KHUZAIRI BIN MAHADZIR", class: "1 AFT" },
+                { id: 46, name: "AMNI SYIFA' BINTI MUHAMMAD NUR ARIF", class: "1 AFT" },
+                { id: 47, name: "MUHAMMAD ARYAN ADHA BIN MAHADI", class: "1 AFT" },
+                { id: 48, name: "MUHAMMAD HAIDAR BIN MAHADZIR", class: "1 AFT" },
+                { id: 49, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "1 AFT" },
+                { id: 50, name: "MUHAMMAD HARITH BIN MOHD SHAMSOL", class: "1 AFT" },
+                { id: 51, name: "MUHAMMAD HAZIQ HAIKAL BIN CHE MAT SOKRI", class: "1 AFT" },
+                { id: 52, name: "NUR AMNA IRDINA BINTI MOHAMAD SHUKUR", class: "1 AFT" },
+                { id: 53, name: "NUR AZRA QAISARA BINTI ABDUL HALIM", class: "1 AFT" },
+                { id: 54, name: "NUR DHIYA QAISARA BINTI MOHD KHAIDZIR", class: "1 AFT" },
+                { id: 55, name: "SITI KHADIJAH BINTI ABDULLAH", class: "1 AFT" },
+                { id: 56, name: "WAN NUR QAISARA AMANI BINTI WAN MOHD SHAHRIL", class: "1 AFT" },
+                { id: 57, name: "WAN NUR QAISARA BALQIS BINTI WAN ABDUL MANAN", class: "1 AFT" },
+                { id: 58, name: "AHMAD ZIYAD FARISH BIN AHMAD FADLY", class: "1 ANR" },
+                { id: 59, name: "FATIN FARHANAH BINTI ABDULLAH", class: "1 ANR" },
+                { id: 60, name: "MUHAMMAD DANIAL IRFAN BIN ROSLEE", class: "1 ANR" },
+                { id: 61, name: "MUHAMMAD SYAQIL ZAFRAN BIN AHMAD SYAHRIN", class: "1 ANR" },
+                { id: 62, name: "NUR ALEEYA ADRIANA BINTI SHAHIRAN", class: "1 ANR" },
+                { id: 63, name: "NUR FATIN SAFIYYA BINTI MOHAMAD SAFUAN", class: "1 ANR" },
+                { id: 64, name: "NUR HUMAIRA SOFEA BINTI MOHAMMAD FAKHRULRAZI", class: "1 ANR" },
+                { id: 65, name: "NUR RAUDAH BINTI ASWADI", class: "1 ANR" },
+                { id: 66, name: "SITI NUR SAFIYAH BINTI MOHAMAD SHUKRI", class: "1 ANR" },
+                { id: 67, name: "ZARA NUR AWATIF BINTI MOHAMAD IZWAN", class: "1 ANR" },
+                { id: 68, name: "AHMAD AMMAR DANISH BIN AHMAD FADLY", class: "3 AFQ" },
+                { id: 69, name: "MUHAMMAD AMMAR DARWISY BIN MOHAMMAD FARED", class: "3 AFQ" },
+                { id: 70, name: "MUHAMMAD ASHRAFF DARWISY BIN MOHD ASYRAF", class: "3 AFQ" },
+                { id: 71, name: "MUHAMMAD AZAM FAIDZ BIN MOHAMMAD RIDZWAN", class: "3 AFQ" },
+                { id: 72, name: "MUHAMMAD FAIQ RAYYAN BIN MOHD FAIZAL", class: "3 AFQ" },
+                { id: 73, name: "MUHAMMAD FIKRI BIN MOHAMAD SHUKRI", class: "3 AFQ" },
+                { id: 74, name: "NUR AMNA QALISYA BINTI MOHAMAD SHUKUR", class: "3 AFQ" },
+                { id: 75, name: "NUR ASIAH BINTI MOHAMAD KHAIDZIR", class: "3 AFQ" },
+                { id: 76, name: "SITI NUR ADIRA BINTI SHAFIAI", class: "3 AFQ" },
+                { id: 77, name: "UWAIS ALQARNI BIN ROSLEE", class: "3 AFQ" },
+                { id: 78, name: "ALISSA HUMAIRA BINTI ASWADI", class: "3 AFT" },
+                { id: 79, name: "MARISA NUR AMNI BINTI MAHD ZAKI", class: "3 AFT" },
+                { id: 80, name: "MUHAMMAD AMMAR BIN ASWADI", class: "3 AFT" },
+                { id: 81, name: "MUHAMMAD AZAM FAHMI BIN AZIZUL", class: "3 AFT" },
+                { id: 82, name: "NUR AMANI ADLINA BINTI MOHAMMAD ADHA", class: "3 AFT" },
+                { id: 83, name: "NUR ARISSA AMANI BINTI MOHD HANIF", class: "3 AFT" },
+                { id: 84, name: "NUR QASEH BINTI ABDULLAH", class: "3 AFT" },
+                { id: 85, name: "PUTRI ANIS SYUHADA BINTI ASWADI", class: "3 AFT" },
+                { id: 86, name: "SITI NUR ALYA BINTI ABDULLAH", class: "3 AFT" },
+                { id: 87, name: "SITI NUR SOFEA BINTI MOHAMAD SHUKRI", class: "3 AFT" },
+                { id: 88, name: "AHMAD DANIAL AZIM BIN AHMAD SYAHRIN", class: "3 ANR" },
+                { id: 89, name: "AHMAD WAFIY BIN ASWADI", class: "3 ANR" },
+                { id: 90, name: "MUHAMMAD ARYAN AFIF BIN HARD ARIF AFDAH", class: "3 ANR" },
+                { id: 91, name: "MUHAMMAD DANISH IRFAN BIN ROSLEE", class: "3 ANR" },
+                { id: 92, name: "NUR ALEEYA BALQIS BINTI ZAINUDIN", class: "3 ANR" },
+                { id: 93, name: "NUR ALEEYA QAISARA BINTI ZAINUDIN", class: "3 ANR" },
+                { id: 94, name: "NUR ALYA ADRIANA BINTI SHAHIRAN", class: "3 ANR" },
+                { id: 95, name: "NUR FARAH NABILA BINTI MOHAMAD SAFUAN", class: "3 ANR" },
+                { id: 96, name: "NUR HUMAIRA BINTI MOHAMMAD FAKHRULRAZI", class: "3 ANR" },
+                { id: 97, name: "NUR RAUDHAH BINTI ASWADI", class: "3 ANR" },
+                { id: 98, name: "WAN MUHAMMAD SYARIFUDDIN BIN WAN ABDUL MANAN", class: "3 ANR" },
+                { id: 99, name: "AHMAD SYAQIL HAIDAR BIN AHMAD SYAHRIN", class: "3 ARR" },
+                { id: 100, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "3 ARR" },
+                { id: 101, name: "AHMAD ZIYAD AMZAR BIN ZAMRI", class: "3 ARR" },
+                { id: 102, name: "AHMAD ZIYAD FARISH BIN AHMAD FADLY", class: "3 ARR" },
+                { id: 103, name: "AHLAMI KHAIRA BINTI MOHD KHAIRI", class: "3 ARR" },
+                { id: 104, name: "AHMAD KHUZAIRI BIN MAHADZIR", class: "3 ARR" },
+                { id: 105, name: "AMNI SYIFA' BINTI MUHAMMAD NUR ARIF", class: "3 ARR" },
+                { id: 106, name: "MUHAMMAD ARYAN ADHA BIN MAHADI", class: "3 ARR" },
+                { id: 107, name: "MUHAMMAD HAIDAR BIN MAHADZIR", class: "3 ARR" },
+                { id: 108, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "3 ARR" },
+                { id: 109, name: "MUHAMMAD HARITH BIN MOHD SHAMSOL", class: "3 ARR" },
+                { id: 110, name: "MUHAMMAD HAZIQ HAIKAL BIN CHE MAT SOKRI", class: "3 ARR" },
+                { id: 111, name: "NUR AMNA IRDINA BINTI MOHAMAD SHUKUR", class: "3 ARR" },
+                { id: 112, name: "NUR AZRA QAISARA BINTI ABDUL HALIM", class: "3 ARR" },
+                { id: 113, name: "NUR DHIYA QAISARA BINTI MOHD KHAIDZIR", class: "3 ARR" },
+                { id: 114, name: "SITI KHADIJAH BINTI ABDULLAH", class: "3 ARR" },
+                { id: 115, name: "WAN NUR QA
