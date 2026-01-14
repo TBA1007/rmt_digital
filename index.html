@@ -2,21 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMT Digital SKKN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RMT DIGITAL SKKN</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .glass-header { background: rgba(30, 64, 175, 0.95); backdrop-filter: blur(10px); }
+        .student-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .student-card:active { transform: scale(0.97); }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
+        // Firebase Setup using your specific config
         const firebaseConfig = {
             apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
             authDomain: "rmt-digital-8df83.firebaseapp.com",
@@ -26,15 +34,16 @@
             appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.firestore();
 
         const App = () => {
             const [searchTerm, setSearchTerm] = useState('');
+            const [activeClass, setActiveClass] = useState('PPKI');
             const [presentToday, setPresentToday] = useState([]);
+            const [isLoading, setIsLoading] = useState(true);
 
+            // Your full student list from the logic provided
             const students = useMemo(() => [
                 { id: 1, name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { id: 2, name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
@@ -66,7 +75,7 @@
                 { id: 28, name: "AUNI ADLINA BINTI MOHAMMAD ROSIDI", class: "1 AFQ" },
                 { id: 29, name: "AUNI BATRISYIA BINTI MOHD ZAKI", class: "1 AFQ" },
                 { id: 30, name: "FATIMAH AZ ZAHRA BINTI HASBULLAH", class: "1 AFQ" },
-                { id: 31, name: "HAIFFA HANA BINTI MOHD HANDIF", class: "1 AFQ" },
+                { id: 31, name: "HAIFFA HANA BINTI MOHD HANIF", class: "1 AFQ" },
                 { id: 32, name: "MEDINA BINTI MUHAMMAD NUR ARIF", class: "1 AFQ" },
                 { id: 33, name: "MUHAMMAD AFIF HARIZ BIN MOHD AMRAN", class: "1 AFQ" },
                 { id: 34, name: "MUHAMMAD AIMAN NAJMI BIN ABDULLAH", class: "1 AFQ" },
@@ -180,149 +189,3 @@
                 { id: 142, name: "NUR AIRIS NAFEESA BINTI MOHD YASSIN", class: "2 ANR" },
                 { id: 143, name: "NUR FATIHAH NABILA BINTI MUHAMAD FAIS", class: "2 ANR" },
                 { id: 144, name: "NUR QAISARA IMANI BINTI AMIRYUSOF SHUKRI", class: "2 ANR" },
-                { id: 145, name: "AHMAD ZUFIQA BIN MOHD ARIF AFDAH", class: "2 ANR" },
-                { id: 146, name: "AHMAD AMMAR DARWISY BIN MOHAMMAD FARED", class: "4 AFQ" },
-                { id: 147, name: "MUHAMMAD AZAM FAIDZ BIN MOHAMMAD RIDZWAN", class: "4 AFQ" },
-                { id: 148, name: "MUHAMMAD FAIQ RAYYAN BIN MOHD FAIZAL", class: "4 AFQ" },
-                { id: 149, name: "MUHAMMAD FIKRI BIN MOHAMAD SHUKRI", class: "4 AFQ" },
-                { id: 150, name: "NUR AMNA QALISYA BINTI MOHAMAD SHUKUR", class: "4 AFQ" },
-                { id: 151, name: "NUR ASIAH BINTI MOHAMAD KHAIDZIR", class: "4 AFQ" },
-                { id: 152, name: "SITI NUR ADIRA BINTI SHAFIAI", class: "4 AFQ" },
-                { id: 153, name: "UWAIS ALQARNI BIN ROSLEE", class: "4 AFQ" },
-                { id: 154, name: "ALISSA HUMAIRA BINTI ASWADI", class: "4 AFT" },
-                { id: 155, name: "MARISA NUR AMNI BINTI MAHD ZAKI", class: "4 AFT" },
-                { id: 156, name: "MUHAMMAD AMMAR BIN ASWADI", class: "4 AFT" },
-                { id: 157, name: "MUHAMMAD AZAM FAHMI BIN AZIZUL", class: "4 AFT" },
-                { id: 158, name: "NUR AMANI ADLINA BINTI MOHAMMAD ADHA", class: "4 AFT" },
-                { id: 159, name: "NUR ARISSA AMANI BINTI MOHD HANIF", class: "4 AFT" },
-                { id: 160, name: "NUR QASEH BINTI ABDULLAH", class: "4 AFT" },
-                { id: 161, name: "PUTRI ANIS SYUHADA BINTI ASWADI", class: "4 AFT" },
-                { id: 162, name: "SITI NUR ALYA BINTI ABDULLAH", class: "4 AFT" },
-                { id: 163, name: "SITI NUR SOFEA BINTI MOHAMAD SHUKRI", class: "4 AFT" },
-                { id: 164, name: "AHMAD DANIAL AZIM BIN AHMAD SYAHRIN", class: "4 ANR" },
-                { id: 165, name: "AHMAD WAFIY BIN ASWADI", class: "4 ANR" },
-                { id: 166, name: "MUHAMMAD ARYAN AFIF BIN HARD ARIF AFDAH", class: "4 ANR" },
-                { id: 167, name: "MUHAMMAD DANISH IRFAN BIN ROSLEE", class: "4 ANR" },
-                { id: 168, name: "NUR ALEEYA BALQIS BINTI ZAINUDIN", class: "4 ANR" },
-                { id: 169, name: "NUR ALEEYA QAISARA BINTI ZAINUDIN", class: "4 ANR" },
-                { id: 170, name: "NUR ALYA ADRIANA BINTI SHAHIRAN", class: "4 ANR" },
-                { id: 171, name: "NUR FARAH NABILA BINTI MOHAMAD SAFUAN", class: "4 ANR" },
-                { id: 172, name: "NUR HUMAIRA BINTI MOHAMMAD FAKHRULRAZI", class: "4 ANR" },
-                { id: 173, name: "NUR RAUDHAH BINTI ASWADI", class: "4 ANR" },
-                { id: 174, name: "WAN MUHAMMAD SYARIFUDDIN BIN WAN ABDUL MANAN", class: "4 ANR" },
-                { id: 175, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "4 ARR" },
-                { id: 176, name: "AHMAD AMMAR DARWISY BIN MOHAMMAD FARED", class: "5 AFQ" },
-                { id: 177, name: "MUHAMMAD AZAM FAIDZ BIN MOHAMMAD RIDZWAN", class: "5 AFQ" },
-                { id: 178, name: "MUHAMMAD FAIQ RAYYAN BIN MOHD FAIZAL", class: "5 AFQ" },
-                { id: 179, name: "MUHAMMAD FIKRI BIN MOHAMAD SHUKRI", class: "5 AFQ" },
-                { id: 180, name: "NUR AMNA QALISYA BINTI MOHAMAD SHUKUR", class: "5 AFQ" },
-                { id: 181, name: "NUR ASIAH BINTI MOHAMAD KHAIDZIR", class: "5 AFQ" },
-                { id: 182, name: "SITI NUR ADIRA BINTI SHAFIAI", class: "5 AFQ" },
-                { id: 183, name: "UWAIS ALQARNI BIN ROSLEE", class: "5 AFQ" },
-                { id: 184, name: "ALISSA HUMAIRA BINTI ASWADI", class: "5 AFT" },
-                { id: 185, name: "MARISA NUR AMNI BINTI MAHD ZAKI", class: "5 AFT" },
-                { id: 186, name: "MUHAMMAD AMMAR BIN ASWADI", class: "5 AFT" },
-                { id: 187, name: "MUHAMMAD AZAM FAHMI BIN AZIZUL", class: "5 AFT" },
-                { id: 188, name: "NUR AMANI ADLINA BINTI MOHAMMAD ADHA", class: "5 AFT" },
-                { id: 189, name: "NUR ARISSA AMANI BINTI MOHD HANIF", class: "5 AFT" },
-                { id: 190, name: "NUR QASEH BINTI ABDULLAH", class: "5 AFT" },
-                { id: 191, name: "PUTRI ANIS SYUHADA BINTI ASWADI", class: "5 AFT" },
-                { id: 192, name: "SITI NUR ALYA BINTI ABDULLAH", class: "5 AFT" },
-                { id: 193, name: "SITI NUR SOFEA BINTI MOHAMAD SHUKRI", class: "5 AFT" },
-                { id: 194, name: "AHMAD DANIAL AZIM BIN AHMAD SYAHRIN", class: "5 ANR" },
-                { id: 195, name: "AHMAD WAFIY BIN ASWADI", class: "5 ANR" },
-                { id: 196, name: "MUHAMMAD ARYAN AFIF BIN HARD ARIF AFDAH", class: "5 ANR" },
-                { id: 197, name: "MUHAMMAD DANISH IRFAN BIN ROSLEE", class: "5 ANR" },
-                { id: 198, name: "NUR ALEEYA BALQIS BINTI ZAINUDIN", class: "5 ANR" },
-                { id: 199, name: "NUR ALEEYA QAISARA BINTI ZAINUDIN", class: "5 ANR" },
-                { id: 200, name: "NUR ALYA ADRIANA BINTI SHAHIRAN", class: "5 ANR" },
-                { id: 201, name: "NUR FARAH NABILA BINTI MOHAMAD SAFUAN", class: "5 ANR" },
-                { id: 202, name: "NUR HUMAIRA BINTI MOHAMMAD FAKHRULRAZI", class: "5 ANR" },
-                { id: 203, name: "NUR RAUDHAH BINTI ASWADI", class: "5 ANR" },
-                { id: 204, name: "WAN MUHAMMAD SYARIFUDDIN BIN WAN ABDUL MANAN", class: "5 ANR" },
-                { id: 205, name: "MUHAMMAD ARYAN AFDAH BIN HARD ARIF AFDAH", class: "5 ARR" },
-                { id: 206, name: "NUR AMNI QALESYA BINTI MOHAMAD FIRDAUS", class: "6 AFQ" },
-                { id: 207, name: "NUR ATHIRAH BINTI AMIRUL SHAH", class: "6 AFT" },
-                { id: 208, name: "NUR QAISARA DAMIA BINTI AMIRYUSOF SHUKRI", class: "6 ANR" },
-                { id: 209, name: "WAN NUR ALEESA BINTI WAN HARD SHAHRIL", class: "6 ARR" },
-                { id: 210, name: "NURUL ATIQAH BINTI BAKRI", class: "PPKI" },
-                { id: 211, name: "MUHAMMAD SYAQIL ZAFRAN BIN AHMAD SYAHRIN", class: "1 ARR" },
-                { id: 212, name: "AHMAD SYARIF BIN ASWADI", class: "2 ARR" },
-                { id: 213, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "2 ARR" },
-                { id: 214, name: "AHMAD SYARIF BIN ASWADI", class: "4 ARR" },
-                { id: 215, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "4 ARR" },
-                { id: 216, name: "AHMAD SYARIF BIN ASWADI", class: "6 AFQ" },
-                { id: 217, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "6 AFT" },
-                { id: 218, name: "AHMAD SYARIF BIN ASWADI", class: "6 ANR" },
-                { id: 219, name: "MUHAMMAD HARITH BIN HARD ARIF AFDAH", class: "6 ARR" }
-            ], []);
-
-            useEffect(() => {
-                const today = new Date().toISOString().split('T')[0];
-                const unsub = db.collection('daily_attendance').doc(today)
-                    .onSnapshot(doc => {
-                        if (doc.exists) setPresentToday(doc.data().students || []);
-                    });
-                return () => unsub();
-            }, []);
-
-            const toggle = async (id) => {
-                const today = new Date().toISOString().split('T')[0];
-                const docRef = db.collection('daily_attendance').doc(today);
-                const isPresent = presentToday.includes(id);
-                
-                await docRef.set({
-                    students: isPresent 
-                        ? firebase.firestore.FieldValue.arrayRemove(id)
-                        : firebase.firestore.FieldValue.arrayUnion(id)
-                }, { merge: true });
-            };
-
-            const filtered = students.filter(s => 
-                s.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-
-            return (
-                <div className="p-4 max-w-md mx-auto">
-                    <div className="bg-blue-600 text-white p-4 rounded shadow-lg mb-4 text-center">
-                        <h1 className="text-xl font-bold">RMT DIGITAL SKKN</h1>
-                        <p className="text-sm font-bold opacity-90 mt-1">Hadir: {presentToday.length} / {students.length}</p>
-                    </div>
-
-                    <input 
-                        type="text" 
-                        placeholder="Cari Nama Murid..." 
-                        className="w-full p-3 border-2 border-blue-200 rounded-lg shadow-sm mb-4 outline-none focus:border-blue-500"
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden divide-y divide-gray-100">
-                        {filtered.length > 0 ? filtered.map(s => (
-                            <div key={s.id} className="p-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
-                                <div className="pr-4">
-                                    <div className="font-bold text-sm text-gray-800 leading-tight mb-1">{s.name}</div>
-                                    <div className="text-xs font-bold text-blue-500 uppercase tracking-wider">{s.class}</div>
-                                </div>
-                                <button 
-                                    onClick={() => toggle(s.id)}
-                                    className={`w-24 py-2 rounded-lg font-black text-xs transition-all transform active:scale-95 shadow-sm
-                                        ${presentToday.includes(s.id) 
-                                            ? 'bg-green-500 text-white shadow-green-200 border-b-4 border-green-700' 
-                                            : 'bg-gray-200 text-gray-500 border-b-4 border-gray-400'}`}
-                                >
-                                    {presentToday.includes(s.id) ? 'HADIR ✓' : 'TANDA'}
-                                </button>
-                            </div>
-                        )) : (
-                            <div className="p-10 text-center text-gray-400 font-bold italic">Nama tidak dijumpai...</div>
-                        )}
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
