@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PENGURUSAN RMT SKKN</title>
+    <title>PENGURUSAN RMT SKIOR</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -22,8 +22,9 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+      
+<script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
 
         const firebaseConfig = {
             apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
@@ -42,11 +43,12 @@
             const [activeClass, setActiveClass] = useState('PPKI');
             const [presentToday, setPresentToday] = useState([]);
             const [time, setTime] = useState(new Date());
+            const [monthlyStats, setMonthlyStats] = useState({});
+            const [searchTerm, setSearchTerm] = useState('');
 
-            // List of classes
             const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
 
-            // Sample data - You can add your full list back once the UI is confirmed working
+            // Paste your FULL list of 219 students here
             const students = [
                 { id: 1, name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { id: 2, name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
@@ -272,12 +274,31 @@
             useEffect(() => {
                 const timer = setInterval(() => setTime(new Date()), 1000);
                 const today = new Date().toISOString().split('T')[0];
-                const unsub = db.collection('daily_attendance').doc(today)
+                
+                // Real-time listener for today
+                const unsubToday = db.collection('daily_attendance').doc(today)
                     .onSnapshot(doc => {
                         if (doc.exists) setPresentToday(doc.data().students || []);
-                    }, err => console.error("Firebase Error:", err));
-                return () => { clearInterval(timer); unsub(); };
-            }, []);
+                    });
+
+                // Fetch monthly summary data
+                const startOfMonth = new Date(time.getFullYear(), time.getMonth(), 1).toISOString().split('T')[0];
+                db.collection('daily_attendance')
+                    .where(firebase.firestore.FieldPath.documentId(), '>=', startOfMonth)
+                    .get()
+                    .then(querySnapshot => {
+                        const counts = {};
+                        querySnapshot.forEach(doc => {
+                            const data = doc.data().students || [];
+                            data.forEach(id => {
+                                counts[id] = (counts[id] || 0) + 1;
+                            });
+                        });
+                        setMonthlyStats(counts);
+                    });
+
+                return () => { clearInterval(timer); unsubToday(); };
+            }, [view]); // Refresh summary when switching views
 
             const toggleAttendance = async (id) => {
                 const today = new Date().toISOString().split('T')[0];
@@ -290,12 +311,28 @@
                 }, { merge: true });
             };
 
+            const exportCSV = () => {
+                let csv = "Bil,Nama,Kelas,Hadir\n";
+                students.forEach((s, i) => {
+                    csv += `${i+1},${s.name},${s.class},${monthlyStats[s.id] || 0}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `RMT_SKKN_Rumusan_${time.getMonth()+1}_2026.csv`);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+
             return (
                 <div className="min-h-screen">
                     <header className="canvas-header text-white p-6 shadow-xl">
                         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white p-2 rounded-xl text-2xl">🥣</div>
+                                <div className="bg-white p-2 rounded-xl text-2xl shadow-inner">🥣</div>
                                 <div>
                                     <h1 className="text-xl font-extrabold uppercase tracking-tight">PENGURUSAN RMT SKKN</h1>
                                     <p className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Sistem Digital 2026</p>
@@ -303,42 +340,51 @@
                             </div>
                             <div className="text-center font-bold">
                                 <p className="text-[10px] opacity-60 uppercase">Masa & Tarikh</p>
-                                <p className="text-lg">{time.toLocaleTimeString('en-GB')} | {time.toLocaleDateString('en-MY')}</p>
+                                <p className="text-lg tabular-nums">
+                                    {time.toLocaleTimeString('en-GB')} | {time.toLocaleDateString('en-MY', {day:'numeric', month:'short'})}
+                                </p>
                             </div>
-                            <a href="https://appsjohor.moe.gov.my/rmt/" target="_blank" className="btn-portal px-6 py-3 rounded-xl text-xs shadow-lg">
-                                🌐 PORTAL E-RMT
+                            <a href="https://appsjohor.moe.gov.my/rmt/" target="_blank" className="btn-portal px-6 py-3 rounded-xl text-xs shadow-lg flex items-center gap-2">
+                                <span>🌐</span> PORTAL E-RMT
                             </a>
                         </div>
                     </header>
 
                     <main className="max-w-6xl mx-auto px-4 mt-8">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                            <div className="stat-card p-6 flex justify-between items-center">
-                                <div><p className="text-[10px] font-bold text-gray-400 uppercase">Hadir Hari Ini</p><p className="text-4xl font-black text-[#002d5b]">{presentToday.length}</p></div>
-                                <div className="text-3xl opacity-20">👥</div>
+                            <div className="stat-card p-6 flex justify-between items-center bg-white border-l-8 border-blue-500">
+                                <div><p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Hadir Hari Ini</p><p className="text-4xl font-black text-[#002d5b]">{presentToday.length}</p></div>
+                                <div className="text-4xl">👥</div>
                             </div>
-                            <div className="stat-card p-6 flex justify-between items-center" style={{borderLeftColor: '#ff7a00'}}>
-                                <div><p className="text-[10px] font-bold text-gray-400 uppercase">Peratus</p><p className="text-4xl font-black text-[#ff7a00]">{((presentToday.length/219)*100).toFixed(1)}%</p></div>
-                                <div className="text-3xl opacity-20">%</div>
+                            <div className="stat-card p-6 flex justify-between items-center bg-white border-l-8 border-orange-500">
+                                <div><p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kadar Kehadiran</p><p className="text-4xl font-black text-[#ff7a00]">{((presentToday.length/219)*100).toFixed(1)}%</p></div>
+                                <div className="text-4xl">📈</div>
                             </div>
-                            <div className="bg-gray-200/50 p-1 rounded-2xl flex">
-                                <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-bold text-[10px] ${view==='attendance'?'bg-[#002d5b] text-white':'text-gray-500'}`}>TANDA</button>
-                                <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-bold text-[10px] ${view==='summary'?'bg-[#002d5b] text-white':'text-gray-500'}`}>RUMUSAN</button>
+                            <div className="bg-gray-200/50 p-1.5 rounded-2xl flex gap-1 shadow-inner">
+                                <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500 hover:bg-gray-300/30'}`}>TANDA KEHADIRAN</button>
+                                <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500 hover:bg-gray-300/30'}`}>RUMUSAN BULANAN</button>
                             </div>
                         </div>
 
                         {view === 'attendance' ? (
-                            <div>
-                                <div className="flex overflow-x-auto gap-2 no-scrollbar mb-6">
+                            <div className="animate-in fade-in duration-500">
+                                <div className="bg-white p-4 rounded-2xl shadow-sm mb-6 flex items-center gap-3">
+                                    <span className="text-gray-400 pl-2">🔍</span>
+                                    <input type="text" placeholder="Cari nama murid..." className="w-full bg-transparent border-none outline-none font-bold text-gray-700" onChange={(e) => setSearchTerm(e.target.value)} />
+                                </div>
+                                <div className="flex overflow-x-auto gap-2 no-scrollbar mb-6 pb-2">
                                     {classes.map(c => (
-                                        <button key={c} onClick={() => setActiveClass(c)} className={`px-5 py-2 rounded-xl whitespace-nowrap text-[10px] font-bold ${activeClass === c ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-400 border border-gray-100'}`}>{c}</button>
+                                        <button key={c} onClick={() => setActiveClass(c)} className={`px-5 py-2.5 rounded-xl whitespace-nowrap text-[10px] font-black transition-all border-2 ${activeClass === c ? 'bg-blue-600 text-white border-blue-600 shadow-lg' : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'}`}>{c}</button>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {students.filter(s => s.class === activeClass).map(s => (
-                                        <div key={s.id} className="bg-white p-4 rounded-2xl shadow-sm flex justify-between items-center border border-gray-50">
-                                            <h3 className="text-[11px] font-black text-gray-800 uppercase">{s.name}</h3>
-                                            <button onClick={() => toggleAttendance(s.id)} className={`px-4 py-2 rounded-lg font-bold text-[10px] ${presentToday.includes(s.id) ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {students.filter(s => s.class === activeClass && s.name.toLowerCase().includes(searchTerm.toLowerCase())).map(s => (
+                                        <div key={s.id} className="bg-white p-4 rounded-2xl shadow-sm flex justify-between items-center border border-gray-100 hover:border-blue-200 transition-all group">
+                                            <div className="flex-1 pr-2">
+                                                <h3 className="text-[10px] font-black text-gray-800 uppercase leading-tight group-hover:text-blue-700">{s.name}</h3>
+                                                <span className="text-[8px] font-bold text-blue-500 bg-blue-50 px-2 py-0.5 rounded uppercase mt-1 inline-block">ID: {s.id}</span>
+                                            </div>
+                                            <button onClick={() => toggleAttendance(s.id)} className={`px-5 py-3 rounded-xl font-black text-[10px] transition-all ${presentToday.includes(s.id) ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
                                                 {presentToday.includes(s.id) ? 'HADIR ✓' : 'TANDA'}
                                             </button>
                                         </div>
@@ -346,8 +392,38 @@
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-white rounded-3xl shadow-xl p-8 text-center text-gray-400 font-bold uppercase tracking-widest">
-                                Rumusan Bulanan Sedang Dijana...
+                            <div className="animate-in slide-in-from-bottom duration-500">
+                                <div className="bg-[#002d5b] p-6 rounded-t-[32px] flex justify-between items-center text-white">
+                                    <div>
+                                        <h2 className="text-xl font-black tracking-tighter">LAPORAN KEHADIRAN RMT</h2>
+                                        <p className="text-[10px] font-bold text-orange-400 uppercase">Rumusan Keseluruhan Januari 2026</p>
+                                    </div>
+                                    <button onClick={exportCSV} className="bg-white text-[#002d5b] px-4 py-2 rounded-xl text-[10px] font-black shadow-lg hover:bg-orange-400 hover:text-white transition-all">
+                                        📥 DOWNLOAD CSV
+                                    </button>
+                                </div>
+                                <div className="bg-white rounded-b-[32px] shadow-xl overflow-hidden">
+                                    <table className="w-full">
+                                        <thead className="bg-gray-50 border-b">
+                                            <tr className="text-[9px] font-black text-gray-400 text-left uppercase">
+                                                <th className="px-6 py-4">Bil</th>
+                                                <th className="px-6 py-4">Nama Murid</th>
+                                                <th className="px-6 py-4">Kelas</th>
+                                                <th className="px-6 py-4 text-center">Bil. Hadir</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {students.map((s, idx) => (
+                                                <tr key={s.id} className="hover:bg-blue-50/50">
+                                                    <td className="px-6 py-4 text-[10px] font-bold text-gray-300">{idx+1}</td>
+                                                    <td className="px-6 py-4 text-[10px] font-black text-[#002d5b] uppercase">{s.name}</td>
+                                                    <td className="px-6 py-4"><span className="text-[8px] font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded uppercase">{s.class}</span></td>
+                                                    <td className="px-6 py-4 text-center font-black text-blue-600">{monthlyStats[s.id] || 0}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         )}
                     </main>
@@ -358,5 +434,3 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-</body>
-</html>
