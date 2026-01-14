@@ -269,7 +269,10 @@
             { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
             { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
         ];
-
+const studentsWithIds = students.map((s, index) => ({
+    ...s,
+    id: `std_${index}_${s.name.replace(/\s+/g, '_')}` // Creates a unique ID
+}));
             // 3. EFFECTS (Sync with Firebase)
             useEffect(() => {
                 const timer = setInterval(() => setTime(new Date()), 1000);
