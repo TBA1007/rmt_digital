@@ -464,10 +464,29 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div className="flex gap-2 no-print">
-                                    <button onClick={exportToCSV} className="px-5 py-2 bg-green-600 text-white rounded-lg text-[10px] font-black hover:bg-green-700 transition-all shadow-md flex items-center gap-2">📊 MUAT TURUN EXCEL</button>
-                                    <button onClick={() => window.print()} className="px-5 py-2 bg-black text-white rounded-lg text-[10px] font-black hover:opacity-80 transition-all shadow-md">🖨️ CETAK LAPORAN</button>
-                                </div>
+                                <div className="flex flex-wrap gap-2 no-print">
+    {/* NEW RESET BUTTON ADDED HERE */}
+    <button 
+        onClick={handleResetAttendance} 
+        className="px-5 py-2 bg-red-600 text-white rounded-lg text-[10px] font-black hover:bg-red-700 transition-all shadow-md flex items-center gap-2"
+    >
+        ⚠️ RESET HARI INI
+    </button>
+
+    <button 
+        onClick={exportToCSV} 
+        className="px-5 py-2 bg-green-600 text-white rounded-lg text-[10px] font-black hover:bg-green-700 transition-all shadow-md flex items-center gap-2"
+    >
+        📊 MUAT TURUN EXCEL
+    </button>
+    
+    <button 
+        onClick={() => window.print()} 
+        className="px-5 py-2 bg-black text-white rounded-lg text-[10px] font-black hover:opacity-80 transition-all shadow-md"
+    >
+        🖨️ CETAK LAPORAN
+    </button>
+</div>
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="w-full">
