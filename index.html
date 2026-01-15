@@ -1,74 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PENGURUSAN RMT SKIOR 2026</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-    /* Added !important to ensure these colors overwrite everything else */
-    .canvas-header { 
-        background-color: #002d5b !important; 
-        border-bottom: 5px solid #ff7a00 !important; 
-    }
-    .student-card { transition: all 0.2s ease; cursor: pointer; }
-    .student-card:active { transform: scale(0.97); }
-    @media print { .no-print { display: none !important; } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PENGURUSAN RMT SKIOR 2026</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .canvas-header { background-color: #002d5b !important; border-bottom: 5px solid #ff7a00 !important; }
+        .student-card { transition: all 0.2s ease; cursor: pointer; }
+        .student-card:active { transform: scale(0.97); }
+        @media print { .no-print { display: none !important; } }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root"></div>
 
-   <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
-        authDomain: "rmt-digital-8df83.firebaseapp.com",
-        projectId: "rmt-digital-8df83",
-        storageBucket: "rmt-digital-8df83.firebasestorage.app",
-        messagingSenderId: "161720627010",
-        appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiwLcVI-EMmP9nRIpA6IXgPICbHyrXwVE",
+            authDomain: "rmt-digital-8df83.firebaseapp.com",
+            projectId: "rmt-digital-8df83",
+            storageBucket: "rmt-digital-8df83.firebasestorage.app",
+            messagingSenderId: "161720627010",
+            appId: "1:161720627010:web:84b4da0da31ea8ca8ca2db"
+        };
 
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-  const App = () => {
-        const [view, setView] = useState('attendance');
-        const [activeClass, setActiveClass] = useState('PPKI');
-        const [presentToday, setPresentToday] = useState([]);
-        const [monthlyStats, setMonthlyStats] = useState({});
-        const [searchTerm, setSearchTerm] = useState('');
-        
-        const now = new Date();
-        const todayStr = now.toISOString().split('T')[0];
-        const currentMonthKey = todayStr.substring(0, 7);
-        
-        const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
+        const App = () => {
+            const [view, setView] = useState('attendance');
+            const [activeClass, setActiveClass] = useState('PPKI');
+            const [presentToday, setPresentToday] = useState([]);
+            const [monthlyStats, setMonthlyStats] = useState({});
+            const [searchTerm, setSearchTerm] = useState('');
+            
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const currentMonthKey = todayStr.substring(0, 7);
+            const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
 
-        const monthOptions = useMemo(() => {
-            const options = [];
-            for (let i = 0; i < 12; i++) {
-                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const val = d.toISOString().substring(0, 7);
-                const label = d.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
-                options.push({ val, label });
-            }
-            return options;
-        }, []);
+            const monthOptions = useMemo(() => {
+                const options = [];
+                for (let i = 0; i < 12; i++) {
+                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const val = d.toISOString().substring(0, 7);
+                    const label = d.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
+                    options.push({ val, label });
+                }
+                return options;
+            }, []);
 
-        const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
-        
-        const rawStudents = [
-                // DATA PPKI
+            const classes = ['PPKI', '1 AFQ', '1 AFT', '1 ANR', '1 ARR', '2 AFQ', '2 AFT', '2 ANR', '2 ARR', '3 AFQ', '3 AFT', '3 ANR', '3 ARR', '4 AFQ', '4 AFT', '4 ANR', '4 ARR', '5 AFQ', '5 AFT', '5 ANR', '5 ARR', '6 AFQ', '6 AFT', '6 ANR', '6 ARR'];
+            
+            const rawStudents = [
                 { name: "KHADEEJA AFEEYA BINTI ISMAIL", class: "PPKI" },
                 { name: "MUHAMMAD AMMAR FARISH BIN MOHD EMRY", class: "PPKI" },
                 { name: "WAN SHAFIY BENJAMIN BIN WAN MOHD HAFIZULLAH", class: "PPKI" },
@@ -102,8 +96,6 @@
                 { name: "NUR QAIREEN QAISARA BINTI MUHAMMAD", class: "PPKI" },
                 { name: "PUTRA RAYYAN MIKAIL BIN NOR RAJU", class: "PPKI" },
                 { name: "RIZQI ASHRAF BIN IZMEER", class: "PPKI" },
-
-                // DATA TAHUN 6
                 { name: "NUR ARFA NADRAH BINTI MOHD DASUKI", class: "6 AFT" },
                 { name: "WAN NUR IRDINA ZULAIKHA BINTI MOHD HAIKAL", class: "6 AFT" },
                 { name: "AR RAYYAN FAWWAZ BIN AIDIL PUTRA", class: "6 AFQ" },
@@ -135,218 +127,52 @@
                 { name: "MUHAMMAD QAUSAR FIQRI BIN MOHAMAD", class: "6 ARR" },
                 { name: "NUR AIERIS ILYANA BINTI NORAZMAN", class: "6 ARR" },
                 { name: "NUR AIMY SAFIYYA BINTI AHMAD FAIZAL", class: "6 ARR" },
-                { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" },
-
-                // DATA TAHUN 5
-                { name: "MUHAMMAD ALIF KAMIL BIN MOKTAR", class: "5 AFT" },
-                { name: "MUHAMMAD IMAN AQIL BIN ABDUL RAHMAN", class: "5 AFT" },
-                { name: "NUR AIN NURUL SHAHADAH BINTI JAFFAR", class: "5 AFT" },
-                { name: "NUR AMEERA SYAKIRA BINTI ISMAIL", class: "5 AFT" },
-                { name: "NUR QAYLA FAKHIRA BINTI ZAKARIA", class: "5 AFT" },
-                { name: "NUR SYAFIQAH BINTI SHAMSUL", class: "5 AFT" },
-                { name: "CHE WAN MUAMMAR MUHAIMIN BIN CHE WAN SUFLI RATMAN", class: "5 AFQ" },
-                { name: "MUHAMMAD HARAZZ HAKEEM BIN MOHD SALUSI", class: "5 AFQ" },
-                { name: "NUR AFZA IMANINA BINTI CHE KAMARUDIN", class: "5 AFQ" },
-                { name: "NUR ALISSA BALQIS BINTI MOHD SHAHFULRIZAN", class: "5 AFQ" },
-                { name: "NUR DELISHA QAIRA BINTI ABD RAHMAN", class: "5 AFQ" },
-                { name: "NUR FATHIAH BINTI MUHAMAD FAIZAL", class: "5 AFQ" },
-                { name: "NUR SYAZA HUMAIRA BINTI SULAIMAN", class: "5 AFQ" },
-                { name: "PUTERI NURAISYA RANIA BINTI MOHD AZELAN", class: "5 AFQ" },
-                { name: "SITI NURNADHIRA BINTI MOHD NURHADI @ MUHAMMAD NAQIB", class: "5 AFQ" },
-                { name: "AHMAD ZACKHERY BIN MOKHZANI MIZAN", class: "5 ANR" },
-                { name: "MUHAMAD AQIL LUTHFY BIN MUHAMAD HAFIZ", class: "5 ANR" },
-                { name: "MUHAMMAD AQMAR AIMAN BIN MOHD.RADUAN", class: "5 ANR" },
-                { name: "MUHAMMAD FAWWAZ AMSYAR BIN MOHD YATIM", class: "5 ANR" },
-                { name: "MUHAMMAD SYAHMI BIN MOHD ZAILANI", class: "5 ANR" },
-                { name: "MUHAMMAD ZIKRY BIN MOHD JOHARI", class: "5 ANR" },
-                { name: "NUR AFINA UMAIRA BINTI AMIRULLAH", class: "5 ANR" },
-                { name: "NUR AIFA IRMANINA BINTI NORAZMAN", class: "5 ANR" },
-                { name: "NUR EMYZA WIDYANA BINTI ABDULLAH", class: "5 ANR" },
-                { name: "NURJANNAH AFRINA BINTI NORFAIZA", class: "5 ANR" },
-                { name: "NURUL ADYRA AZZAHRA BINTI MOHD HISYAM", class: "5 ANR" },
-                { name: "SYAZRIL BIN SAIFULLAH", class: "5 ANR" },
-                { name: "AHMAD PUTRA FAIZ BIN AHMAD FAIZAL", class: "5 ARR" },
-                { name: "ANNUR PUTRI AQILAH BINTI AHMAD ZAKI", class: "5 ARR" },
-                { name: "MOHAMAD LUTFI HAKIM BIN MOHD AZUAN", class: "5 ARR" },
-                { name: "MUHAMAD AMMAR ASHWAD BIN SUHAIMI", class: "5 ARR" },
-                { name: "MUHAMAD IRFAN MURSIDI BIN BAHARUDIN", class: "5 ARR" },
-                { name: "MUHAMAD RAMDAN RIZQI BIN HASRORIZAL", class: "5 ARR" },
-                { name: "MUHAMMAD LUTFI FAKHRULLAH BIN MUHAMAD ALHAFIS", class: "5 ARR" },
-                { name: "MUHAMMAD SYAH MUIZZ BIN IDRIS", class: "5 ARR" },
-                { name: "NIK NUR HUMAIRA BINTI NIK AZLAN", class: "5 ARR" },
-                { name: "NUR AISYA UMAIRAH BINTI ABDUL HAFIZ", class: "5 ARR" },
-                { name: "NUR FAZLIATUL AQIRRA BINTI YACCUB", class: "5 ARR" },
-                { name: "NUR HUSNA HUMAYRAA BINTI MOHD NASRI", class: "5 ARR" },
-                { name: "NUR ZULAIKHA SYAHIRAH BINTI ZAHARI", class: "5 ARR" },
-                { name: "NURIN DAMIA ALISYA BINTI MOHD IDZUAN", class: "5 ARR" },
-                { name: "TUAN NABIL NAJMIL BIN TUAN KAMARUL AZIZAN", class: "5 ARR" },
-
-                // DATA TAHUN 4
-                { name: "CHE NUR AINA NADHIRA BINTI CHE SAUFI", class: "4 AFT" },
-                { name: "HASNA QHAIRIYAH BINTI MOHAMAD RAHIMI", class: "4 AFT" },
-                { name: "MUHAMMAD FIRAS NAUFAL BIN ROSLI", class: "4 AFT" },
-                { name: "MUHAMMAD NAQIB SYAWAL HAFIY BIN MOHD KHAIRUDIN", class: "4 AFT" },
-                { name: "MUHAMMAD WAFIY ADHA BIN MAWARDI", class: "4 AFT" },
-                { name: "NAZIRAH AFINA ZAHIRA BINTI ABDUL AZIZ", class: "4 AFT" },
-                { name: "NUR AWATIF IRDINA BINTI ABDUL MANAF", class: "4 AFT" },
-                { name: "NUR RANIA ALISHA BINTI ABD RANI", class: "4 AFT" },
-                { name: "NUR SYASYA ARIANA BINTI SHAHRUL RIDHZUAN", class: "4 AFT" },
-                { name: "TUAN IRENE ARDINI BINTI TUAN AFIF", class: "4 AFT" },
-                { name: "AISH QUSYAIRI BIN AZIAN", class: "4 AFQ" },
-                { name: "DHIA NURAISYAH SAFIYYA BINTI MOHD FAIZOL", class: "4 AFQ" },
-                { name: "MUHAMMAD ADAM IQRAM BIN AHMAD AL-HAFIZ", class: "4 AFQ" },
-                { name: "MUHAMMAD IMAAN A'IZUDDIN BIN MOHD NASRULLAH", class: "4 AFQ" },
-                { name: "MUHAMMAD SHAHRUL NIDZMAN BIN BADROL HISHAM", class: "4 AFQ" },
-                { name: "NUR ALESHA QAISARA BINTI MOHD ZULADERA", class: "4 AFQ" },
-                { name: "NUR ARISSA SUMMAYAH BINTI MOHD SAFUWAN FATIHI", class: "4 AFQ" },
-                { name: "NUR DELISHA ADELIA BINTI MOHAMAD EZRI", class: "4 AFQ" },
-                { name: "NUR FASHA HUMAYRAA BINTI MOHD ZAINAL", class: "4 AFQ" },
-                { name: "NUR SYAFIA BINTI AHMAD FAIZA", class: "4 AFQ" },
-                { name: "PUTRI LARA ELYSHA BINTI MOHD SHARIFF", class: "4 AFQ" },
-                { name: "CHE MUHAMMAD IZZAT HARIS BIN CHE SAUFI", class: "4 ANR" },
-                { name: "MAISARAH BINTI FAUZI", class: "4 ANR" },
-                { name: "MOHAMAD ALIF AR'SYAD BIN MOHD AZLAN", class: "4 ANR" },
-                { name: "MUHAMMAD AL AMIN FIKRI BIN MOHD ASKOZI", class: "4 ANR" },
-                { name: "MUHAMMAD AMMAR HARIZ BIN MOHD FAIZ", class: "4 ANR" },
-                { name: "MUHAMMAD FAKRUL RAZI BIN MOHD ABI RAFDI", class: "4 ANR" },
-                { name: "MUHAMMAD NUR FAKRULLAH BIN HARDY RAFFI", class: "4 ANR" },
-                { name: "MUHAMMAD SHAUQI ILLIAS BIN MOHD SALMAN", class: "4 ANR" },
-                { name: "MUHAMMAD YUSOF NAUFAL BIN MOHD ANUAR", class: "4 ANR" },
-                { name: "NOR AUNI ADELIA BINTI AZLI", class: "4 ANR" },
-                { name: "NUR A'ISYAH BINTI MOHAMAD BUDIN", class: "4 ANR" },
-                { name: "NUR AMANI FARHA BINTI MUHAMMAD HASSAN", class: "4 ANR" },
-                { name: "NUR AMEERAH RAYHANAH BINTI AMIR HAMZAH", class: "4 ANR" },
-                { name: "NUR NAJLA HUMAIRA BINTI LAILATU AKMAL", class: "4 ANR" },
-                { name: "NUR SAFIYA ALISYA BINTI BIDIN", class: "4 ANR" },
-                { name: "NUR SYAZA HANNANI BINTI SULAIMAN", class: "4 ANR" },
-                { name: "SYAKIRA BATRISYA BINTI AHMAD NIZAM", class: "4 ANR" },
-                { name: "WAN NUR SYARIFAH NAJIHAH BINTI WAN SHAIRUL SUHAIMIN", class: "4 ANR" },
-
-                // DATA TAHUN 3
-                { name: "AULIA IZZATUNNISA BINTI AHMAD HADYAN", class: "3 AFT" },
-                { name: "CHE WAN NUR HAZWANA BINTI CHE WAN OSMAN", class: "3 AFT" },
-                { name: "MUHAMMAD AMMAR BIN AHMAD FAIZA", class: "3 AFT" },
-                { name: "MUHAMMAD ZIYAD ZAKWAN BIN ZAMRI", class: "3 AFT" },
-                { name: "WAN MUHAMMAD AMMAR BIN WAN MOHD HAIKAL", class: "3 AFT" },
-                { name: "IZZ HADIF BIN AFFANDI", class: "3 AFQ" },
-                { name: "MUHAMMAD 'AKIF KHALISH BIN MUHAMAD ZAHIRUDDIN", class: "3 AFQ" },
-                { name: "MUHAMMAD ABID RAZIN BIN ROSMAN", class: "3 AFQ" },
-                { name: "MUHAMMAD AQASHAF BIN HARDY SAKHA", class: "3 AFQ" },
-                { name: "MUHAMMAD ASFA SYAFIQ BIN SHAMSUL", class: "3 AFQ" },
-                { name: "MUHAMMAD KHALISH ZAFRAN BIN HARDY AMIRUL", class: "3 AFQ" },
-                { name: "NAZHAN HADIF BIN ZAKARIA", class: "3 AFQ" },
-                { name: "NOR FATIHAH BINTI SUKRI", class: "3 AFQ" },
-                { name: "TUAN IRENE AMMARA BINTI TUAN AFIF", class: "3 AFQ" },
-                { name: "AZ ZAHRA ABISHA BINTI AIDIL PUTRA VIJAYARAGAVAN SELVARAJ", class: "3 ANR" },
-                { name: "IFFAT NUR JANNAH BINTI MOKHZANI MIZAN", class: "3 ANR" },
-                { name: "MUHAMMAD RAYHAN AKIF BIN HARDY SAIFULIZAN", class: "3 ANR" },
-                { name: "MOHAMMAD RAYYAN IMAN BIN ABDUL HAFIZ", class: "3 ANR" },
-                { name: "MUHAMMAD ZAYYAN ABQARI BIN MOHAMAD", class: "3 ANR" },
-                { name: "NUR AIRIS SYAKEELA BINTI AHMAD FAIZAL", class: "3 ANR" },
-                { name: "NUR ALEEYA ZAHRA BINTI HARDY SHAHIFULRIZAN", class: "3 ANR" },
-                { name: "NUR JANNATUL SAFIYA BINTI NORFAIZA", class: "3 ANR" },
-                { name: "SITI MARYAM BINTI HARDY SULAIMAN", class: "3 ANR" },
-                { name: "AHMAD ADHAM ARIF BIN AHMAD KHARULDIN", class: "3 ARR" },
-                { name: "AISYAH HUMAIRAH BINTI SAIFULLAH", class: "3 ARR" },
-                { name: "MUHAMAD HARITH HAKIM BIN ISMAIL", class: "3 ARR" },
-                { name: "MUHAMAD IKHWAN ADHA BIN BAHARUDIN", class: "3 ARR" },
-                { name: "MUHAMMAD ADAM RAFFI BIN ZAINURDDIN", class: "3 ARR" },
-                { name: "MUHAMMAD ADIB NAUFAL BIN HARDY DASUKI", class: "3 ARR" },
-                { name: "MUHAMMAD DZAKWAN ANAQI BIN AHMAD", class: "3 ARR" },
-                { name: "MUHAMMAD FARISH IZZUDDIN BIN HARDY ZAINAL", class: "3 ARR" },
-                { name: "MUHAMMAD IRFAN HAQIMI BIN MUHAIDI", class: "3 ARR" },
-                { name: "MUHAMMAD LUTH FIRDAUS BIN ABDULLAH", class: "3 ARR" },
-                { name: "NUR AAIRA ARISSA BINTI AMIRULLAH", class: "3 ARR" },
-                { name: "NUR AIRA ASSYIFA BINTI MUSTAFFA KAMAL", class: "3 ARR" },
-                { name: "RANIATU JANNA BINTI SAKERI", class: "3 ARR" },
-                { name: "ROSE ELENA EMMALIYN BINTI ALANG ISKANDAR", class: "3 ARR" },
-                { name: "WAN NUR AYRA IMANI BINTI WAN HARDY ARIF AFDAH", class: "3 ARR" },
-
-                // DATA TAHUN 2
-                { name: "MUHAMMAD AARIZ ZAKIR BIN FAIZOL", class: "2 AFT" },
-                { name: "MUHAMMAD AQIL BIN HARDY FAIZOL", class: "2 AFQ" },
-                { name: "MUHAMMAD FAKHRUL HAKIMI BIN MUHAMAD FAIZAL", class: "2 AFQ" },
-                { name: "AQEEL ARSYAD BIN ABD RAHMAN", class: "2 ANR" },
-                { name: "CHE WAN NUR NAIRA FATIHAH BINTI CHE WAN SUFLI RATMAN", class: "2 ANR" },
-                { name: "DAMIANA SOFIA BINTI ZAKARIA", class: "2 ANR" },
-                { name: "DHIA KHADEEJA BINTI HANAFFI", class: "2 ANR" },
-                { name: "LUTH QAMAR BIN AHMAD KHAIRUL", class: "2 ANR" },
-                { name: "MUHAMMAD AIDIL SYAWALUDIN BIN CHE", class: "2 ANR" },
-                { name: "MUHAMMAD AIRELL TESA BIN HARDY IZWAN", class: "2 ANR" },
-                { name: "MUHAMMAD AQIL ANAQI BIN ABDUL JABAR", class: "2 ANR" },
-                { name: "MUHAMMAD DANISH HAFIZI BIN HARDY IDZUAN", class: "2 ANR" },
-                { name: "MUHAMMAD FAHIM NASRUDDIN BIN MUHAMAD FAIS", class: "2 ANR" },
-                { name: "MUHAMMAD HAKIM BIN ABDUL HADI", class: "2 ANR" },
-                { name: "MUHAMMAD HARIS BIN HARDY NURHADI @ MUHAMMAD NAQIB", class: "2 ANR" },
-                { name: "NUR AIRIS NAFEESA BINTI HARDY YASSIN", class: "2 ANR" },
-                { name: "NUR FATIHAH NABILA BINTI MUHAMAD FAIS", class: "2 ANR" },
-                { name: "NUR QAISARA IMANI BINTI AMIRYUSOF SHUKRI", class: "2 ANR" },
-                { name: "AHMAD ZUFIQA BIN SUHAMESI @ SUHAMIZI", class: "2 ARR" },
-                { name: "AQEEB RAYYAN BIN NOOR AFSYAM RIZZUAN", class: "2 ARR" },
-                { name: "MUHAMMAD ADWA FAYYAD BIN AFIF FARHAN", class: "2 ARR" },
-                { name: "MUHAMMAD ASHRAF HUZAIRI BIN ABDULLAH", class: "2 ARR" },
-                { name: "MUHAMMAD HAFIZ AR RAYYAN BIN MUHAMMAD HASSAN", class: "2 ARR" },
-                { name: "MUHAMMAD NOR HARRAZ BIN HARDY NOOR", class: "2 ARR" },
-                { name: "MUHAMMAD NUR AIDIL ZIKRY BIN HARDY RAFFI", class: "2 ARR" },
-                { name: "MUHAMMAD WARITH ADAM BIN HARDY HISYAM", class: "2 ARR" },
-                { name: "MUHAMMAD WAZIF ASYRAF BIN MAWARDI", class: "2 ARR" },
-                { name: "NUR AMMARA AYUNI BINTI SUHAIMI", class: "2 ARR" },
-                { name: "NUR ASYA AR'MINA BINTI HARDY AZLAN", class: "2 ARR" },
-                { name: "NUR ATIRA HUMAIRA BINTI HARDY RASHIMAN", class: "2 ARR" },
-                { name: "NUR DINARA YUSRINA BINTI MOHAMAD EZRI", class: "2 ARR" },
-                { name: "NUR MUHAMMAD HANNAN BIN HARDY HELMI", class: "2 ARR" },
-                { name: "ROSE SYAWATUL UQIRA BINTI NOR AZMI", class: "2 ARR" },
-                { name: "SU'MARHAINI PUTRI BINTI ALANG ISKANDAR", class: "2 ARR" }
+                { name: "NUR NAJWA AMNA BINTI RASID", class: "6 ARR" }
             ];
-        const studentsWithIds = useMemo(() => 
-            rawStudents.map(s => ({ 
-                ...s, 
-                id: s.name.trim().replace(/\s+/g, '_').toLowerCase() 
-            }))
-        , []);
 
-        const globalStats = useMemo(() => {
-            const total = studentsWithIds.length;
-            const present = presentToday.length;
-            const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-            return { total, present, percent };
-        }, [presentToday, studentsWithIds]);
+            const studentsWithIds = useMemo(() => 
+                rawStudents.map(s => ({ 
+                    ...s, 
+                    id: s.name.trim().replace(/\s+/g, '_').toLowerCase() 
+                }))
+            , []);
 
-        useEffect(() => {
-            const unsub = db.collection('daily_attendance').doc(todayStr)
-                .onSnapshot(doc => {
-                    if (doc.exists) {
-                        setPresentToday(doc.data().students || []);
-                    } else {
-                        setPresentToday([]);
-                    }
-                });
-            return () => unsub();
-        }, [todayStr]);
+            const globalStats = useMemo(() => {
+                const total = studentsWithIds.length;
+                const present = presentToday.length;
+                const percent = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
+                return { total, present, percent };
+            }, [presentToday, studentsWithIds]);
 
-        useEffect(() => {
-            if (view === 'summary') {
-                const unsub = db.collection('daily_attendance')
-                    .where(firebase.firestore.FieldPath.documentId(), '>=', `${selectedMonth}-01`)
-                    .where(firebase.firestore.FieldPath.documentId(), '<=', `${selectedMonth}-31`)
-                    .onSnapshot(snapshot => {
-                        const counts = {};
-                        snapshot.forEach(doc => {
-                            const students = doc.data().students || [];
-                            students.forEach(id => {
-                                counts[id] = (counts[id] || 0) + 1;
-                            });
-                        });
-                        setMonthlyStats(counts);
+            useEffect(() => {
+                const unsub = db.collection('daily_attendance').doc(todayStr)
+                    .onSnapshot(doc => {
+                        setPresentToday(doc.exists ? (doc.data().students || []) : []);
                     });
                 return () => unsub();
-            }
-        }, [view, selectedMonth]);
+            }, [todayStr]);
 
-        const toggleAttendance = async (studentId) => {
-            const docRef = db.collection('daily_attendance').doc(todayStr);
-            const isPresent = presentToday.includes(studentId);
-            try {
+            useEffect(() => {
+                if (view === 'summary') {
+                    const unsub = db.collection('daily_attendance')
+                        .where(firebase.firestore.FieldPath.documentId(), '>=', `${selectedMonth}-01`)
+                        .where(firebase.firestore.FieldPath.documentId(), '<=', `${selectedMonth}-31`)
+                        .onSnapshot(snapshot => {
+                            const counts = {};
+                            snapshot.forEach(doc => {
+                                (doc.data().students || []).forEach(id => {
+                                    counts[id] = (counts[id] || 0) + 1;
+                                });
+                            });
+                            setMonthlyStats(counts);
+                        });
+                    return () => unsub();
+                }
+            }, [view, selectedMonth]);
+
+            const toggleAttendance = async (studentId) => {
+                const docRef = db.collection('daily_attendance').doc(todayStr);
+                const isPresent = presentToday.includes(studentId);
                 await docRef.set({
                     students: isPresent 
                         ? firebase.firestore.FieldValue.arrayRemove(studentId)
@@ -354,202 +180,153 @@
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
                     date: todayStr
                 }, { merge: true });
-            } catch (err) { console.error("Error:", err); }
-        };
+            };
 
-        const exportToCSV = () => {
-            const headers = ["Bil", "Nama Murid", "Kelas", `Jumlah Hadir (${selectedMonth})`];
-            const rows = filteredStudents.map((s, idx) => [
-                idx + 1,
-                s.name,
-                s.class,
-                monthlyStats[s.id] || 0
-            ]);
-            const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Laporan_RMT_${activeClass}_${selectedMonth}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
+            const exportToCSV = () => {
+                const headers = ["Bil", "Nama Murid", "Kelas", `Hadir (${selectedMonth})`];
+                const rows = filteredStudents.map((s, idx) => [idx + 1, s.name, s.class, monthlyStats[s.id] || 0]);
+                const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Laporan_RMT_${activeClass}_${selectedMonth}.csv`;
+                link.click();
+            };
 
-        const filteredStudents = useMemo(() => {
-            return studentsWithIds.filter(s => 
-                s.class.trim() === activeClass && 
-                s.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }, [activeClass, studentsWithIds, searchTerm]);
+            const handleResetAttendance = async () => {
+                if (window.confirm("Pasti reset ke 0?")) {
+                    await db.collection('daily_attendance').doc(todayStr).set({
+                        students: [],
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                        date: todayStr
+                    });
+                }
+            };
 
-       const handleResetAttendance = async () => {
-    if (window.confirm("Peringatan: Adakah anda pasti mahu memadam SEMUA kehadiran hari ini?")) {
-        try {
-            await db.collection('daily_attendance').doc(todayStr).set({
-                students: [], // Setting this to an empty array resets count to 0
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                date: todayStr
-            });
-            alert("Sistem telah diset semula ke 0.");
-        } catch (err) {
-            console.error("Reset failed:", err);
-        }
-    }
-};
-          return (
-            <div className="min-h-screen pb-20">
-                <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
-                    <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-white p-2 rounded-xl text-xl">🥣</div>
-                            <div>
-                                <h1 className="text-lg font-black uppercase leading-none">RMT SKIOR</h1>
-                                <p className="text-[9px] font-bold text-orange-400 tracking-widest mt-1">SISTEM KEHADIRAN DIGITAL</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-4">
-                            <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
-                                <p className="text-[8px] font-bold uppercase opacity-60">Hadir Hari Ini</p>
-                                <p className="text-lg font-black text-orange-400 leading-none">{globalStats.present} / {globalStats.total}</p>
-                            </div>
-                            <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[90px]">
-                                <p className="text-[8px] font-bold uppercase opacity-60">Peratus</p>
-                                <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
-                            </div>
-                            <a href="https://idme.moe.gov.my/" target="_blank" className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-xl border border-orange-400 text-center min-w-[90px] transition-all flex flex-col justify-center items-center shadow-lg group">
-    <p className="text-[8px] font-extrabold uppercase text-white/80 group-hover:text-white">Portal</p>
-    <p className="text-[10px] font-black text-white leading-none tracking-tighter">MOE / iDME</p>
-</a>
-                        </div>
-                    </div>
-                </header>
+            const filteredStudents = useMemo(() => {
+                return studentsWithIds.filter(s => 
+                    s.class.trim() === activeClass && 
+                    s.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }, [activeClass, studentsWithIds, searchTerm]);
 
-                <main className="max-w-6xl mx-auto px-4 mt-6">
-                    <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner">
-                        <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>TANDA HADIR</button>
-                        <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500'}`}>RUMUSAN & SEJARAH</button>
-                    </div>
-
-                    <div className="no-print mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                        <div className="flex flex-wrap justify-center gap-2 mb-4">
-                            {classes.map(c => (
-                                <button key={c} onClick={() => setActiveClass(c)} className={`px-3 py-2 rounded-lg text-[10px] font-black border ${activeClass === c ? 'bg-orange-500 text-white border-orange-500' : 'bg-gray-50 text-gray-400'}`}>{c}</button>
-                            ))}
-                        </div>
-                        <input type="text" placeholder="Cari nama murid..." className="w-full p-4 rounded-xl border border-gray-100 text-sm font-bold outline-none focus:ring-2 focus:ring-blue-500" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    </div>
-
-                    {view === 'attendance' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {filteredStudents.map((s, idx) => {
-                                const isPresent = presentToday.includes(s.id);
-                                return (
-                                    <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${isPresent ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent shadow-sm'}`}>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-[10px] font-bold text-gray-300 w-5">{idx + 1}</span>
-                                            <p className={`text-xs font-extrabold uppercase ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
-                                        </div>
-                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isPresent ? 'bg-blue-600 text-white' : 'bg-gray-100 text-transparent'}`}>✓</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            return (
+                <div className="min-h-screen pb-20">
+                    <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-white p-2 rounded-xl text-xl shadow-inner">🥣</div>
                                 <div>
-                                    <h2 className="text-xl font-black text-[#002d5b]">RUMUSAN KEHADIRAN</h2>
-                                    <div className="flex items-center gap-2 mt-2 no-print">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase">Pilih Bulan:</label>
-                                        <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="bg-gray-100 border-none rounded-lg px-3 py-1 text-xs font-bold text-blue-700">
-                                            {monthOptions.map(opt => <option key={opt.val} value={opt.val}>{opt.label}</option>)}
-                                        </select>
+                                    <h1 className="text-lg font-black uppercase leading-none tracking-tight">RMT SKIOR</h1>
+                                    <p className="text-[9px] font-bold text-orange-400 tracking-widest mt-1">SISTEM KEHADIRAN DIGITAL</p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <a href="https://idme.moe.gov.my/" target="_blank" className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-xl border border-orange-400 text-center min-w-[90px] transition-all flex flex-col justify-center items-center shadow-lg group">
+                                    <p className="text-[8px] font-extrabold uppercase text-white/80 group-hover:text-white leading-none">Portal</p>
+                                    <p className="text-[10px] font-black text-white leading-none mt-1">MOE / iDME</p>
+                                </a>
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
+                                    <p className="text-[8px] font-bold uppercase opacity-60">Hadir</p>
+                                    <p className="text-lg font-black text-orange-400 leading-none">{globalStats.present}/{globalStats.total}</p>
+                                </div>
+                                <div className="bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-center min-w-[80px]">
+                                    <p className="text-[8px] font-bold uppercase opacity-60">Peratus</p>
+                                    <p className="text-lg font-black text-green-400 leading-none">{globalStats.percent}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto px-4 mt-6">
+                        <div className="flex bg-gray-200/50 p-1 rounded-2xl mb-6 no-print max-w-sm mx-auto shadow-inner border border-gray-200">
+                            <button onClick={() => setView('attendance')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='attendance'?'bg-[#002d5b] text-white shadow-md':'text-gray-500 hover:text-gray-700'}`}>TANDA HADIR</button>
+                            <button onClick={() => setView('summary')} className={`flex-1 py-3 rounded-xl font-black text-[10px] transition-all ${view==='summary'?'bg-[#002d5b] text-white shadow-md':'text-gray-500 hover:text-gray-700'}`}>RUMUSAN & SEJARAH</button>
+                        </div>
+
+                        <div className="no-print mb-6 bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
+                            <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+                                {classes.map(c => (
+                                    <button key={c} onClick={() => setActiveClass(c)} className={`px-3 py-2 rounded-lg text-[9px] font-black border transition-all ${activeClass === c ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-gray-50 text-gray-400 border-gray-100 hover:bg-gray-100'}`}>{c}</button>
+                                ))}
+                            </div>
+                            <input type="text" placeholder="Cari nama murid..." className="w-full p-4 rounded-2xl bg-gray-50 border-none text-sm font-bold outline-none focus:ring-2 focus:ring-orange-400 transition-all shadow-inner" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        </div>
+
+                        {view === 'attendance' ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {filteredStudents.map((s, idx) => {
+                                    const isPresent = presentToday.includes(s.id);
+                                    return (
+                                        <div key={s.id} onClick={() => toggleAttendance(s.id)} className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all student-card ${isPresent ? 'bg-blue-50 border-blue-500 shadow-blue-100' : 'bg-white border-transparent shadow-sm hover:border-gray-200'}`}>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[10px] font-black text-gray-300 w-5">{idx + 1}</span>
+                                                <p className={`text-xs font-black uppercase tracking-tight ${isPresent ? 'text-blue-900' : 'text-gray-700'}`}>{s.name}</p>
+                                            </div>
+                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${isPresent ? 'bg-blue-600 text-white rotate-0' : 'bg-gray-100 text-transparent rotate-90'}`}>✓</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 overflow-hidden">
+                                <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                                    <div>
+                                        <h2 className="text-xl font-black text-[#002d5b]">RUMUSAN {activeClass}</h2>
+                                        <div className="flex items-center gap-2 mt-2 no-print">
+                                            <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="bg-gray-100 border-none rounded-lg px-3 py-1.5 text-[10px] font-black text-blue-700 outline-none">
+                                                {monthOptions.map(opt => <option key={opt.val} value={opt.val}>{opt.label}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 no-print">
+                                        <button onClick={handleResetAttendance} className="px-4 py-2 bg-red-100 text-red-600 rounded-xl text-[10px] font-black hover:bg-red-200 transition-all border border-red-200">RESET</button>
+                                        <button onClick={exportToCSV} className="px-4 py-2 bg-green-100 text-green-700 rounded-xl text-[10px] font-black hover:bg-green-200 transition-all border border-green-200">CSV/EXCEL</button>
+                                        <button onClick={() => window.print()} className="px-4 py-2 bg-gray-800 text-white rounded-xl text-[10px] font-black hover:bg-black transition-all shadow-md">CETAK</button>
                                     </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2 no-print">
-    {/* NEW RESET BUTTON ADDED HERE */}
-    <button 
-        onClick={handleResetAttendance} 
-        className="px-5 py-2 bg-red-600 text-white rounded-lg text-[10px] font-black hover:bg-red-700 transition-all shadow-md flex items-center gap-2"
-    >
-        ⚠️ RESET HARI INI
-    </button>
-
-    <button 
-        onClick={exportToCSV} 
-        className="px-5 py-2 bg-green-600 text-white rounded-lg text-[10px] font-black hover:bg-green-700 transition-all shadow-md flex items-center gap-2"
-    >
-        📊 MUAT TURUN EXCEL
-    </button>
-    
-    <button 
-        onClick={() => window.print()} 
-        className="px-5 py-2 bg-black text-white rounded-lg text-[10px] font-black hover:opacity-80 transition-all shadow-md"
-    >
-        🖨️ CETAK LAPORAN
-    </button>
-</div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead>
+                                            <tr className="border-b-2 border-gray-100">
+                                                <th className="py-3 px-2 text-[10px] font-black text-gray-400 uppercase">Bil</th>
+                                                <th className="py-3 px-2 text-[10px] font-black text-gray-400 uppercase">Nama</th>
+                                                <th className="py-3 px-2 text-center text-[10px] font-black text-gray-400 uppercase">Kehadiran</th>
+                                                <th className="py-3 px-2 text-right text-[10px] font-black text-gray-400 uppercase">Status Hari Ini</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filteredStudents.map((s, idx) => {
+                                                const count = monthlyStats[s.id] || 0;
+                                                const isPresentToday = presentToday.includes(s.id);
+                                                return (
+                                                    <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50">
+                                                        <td className="py-4 px-2 text-[10px] font-bold text-gray-400">{idx + 1}</td>
+                                                        <td className="py-4 px-2 text-xs font-black text-gray-800 uppercase leading-tight">{s.name}</td>
+                                                        <td className="py-4 px-2 text-center">
+                                                            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-[10px] font-black">{count} HARI</span>
+                                                        </td>
+                                                        <td className="py-4 px-2 text-right">
+                                                            {isPresentToday ? 
+                                                                <span className="text-green-500 font-black text-[10px]">HADIR</span> : 
+                                                                <span className="text-red-300 font-bold text-[10px]">TIADA</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="border-b text-[10px] font-black text-gray-400 uppercase text-left">
-                                            <th className="py-3 px-2">Bil</th>
-                                            <th className="py-3 px-2">Nama Murid</th>
-                                            <th className="py-3 px-2 text-center">Kehadiran ({selectedMonth})</th>
-                                            <th className="py-3 px-2 text-right">Status Hari Ini</th>
-                                        </tr>
-                                    </thead>
-                                   <tbody>
-                                        {filteredStudents.map((s, idx) => {
-                                            const isPresentToday = presentToday.includes(s.id);
-                                            const monthlyCount = monthlyStats[s.id] || 0;
-                                            return (
-                                                <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                                                    <td className="py-4 px-2 text-xs font-bold text-gray-300">{idx + 1}</td>
-                                                    <td className="py-4 px-2 text-[11px] font-black text-blue-900 uppercase">{s.name}</td>
-                                                    <td className="py-4 px-2 text-center">
-                                                        <span className="bg-orange-100 text-orange-700 py-1 px-3 rounded-full text-[10px] font-black">
-                                                            {monthlyCount} HARI
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-4 px-2 text-right">
-                                                        {isPresentToday ? 
-                                                            <span className="text-green-500 font-black text-[10px]">HADIR</span> : 
-                                                            <span className="text-red-300 font-bold text-[10px]">TIADA</span>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    )}
-                </main>
+                        )}
+                    </main>
+                </div>
+            );
+        };
 
-                <footer className="no-print fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-[#002d5b] text-white py-4 px-6 rounded-2xl shadow-2xl flex justify-between items-center border border-white/20">
-                    <div className="flex flex-col">
-                        <span className="text-[8px] font-bold opacity-50 uppercase tracking-tighter">Tarikh Hari Ini</span>
-                        <span className="text-xs font-black">{new Date().toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                    </div>
-                    <div className="h-8 w-[1px] bg-white/10"></div>
-                    <div className="text-right">
-                        <span className="text-[8px] font-bold opacity-50 uppercase tracking-tighter">Status Server</span>
-                        <div className="flex items-center gap-2 justify-end">
-                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span className="text-xs font-black italic">SISTEM AKTIF</span>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        );
-    };
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
