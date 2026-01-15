@@ -44,13 +44,15 @@
             const [monthlyStats, setMonthlyStats] = useState({});
             const [searchTerm, setSearchTerm] = useState('');
             
-            const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
-            const currentMonthKey = todayStr.substring(0, 7);
+            // Perbaiki bug: definisikan selectedDate sebagai state
+            const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+            
+            const currentMonthKey = selectedDate.substring(0, 7);
             const [selectedMonth, setSelectedMonth] = useState(currentMonthKey);
 
             const monthOptions = useMemo(() => {
                 const options = [];
+                const now = new Date();
                 for (let i = 0; i < 12; i++) {
                     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
                     const val = d.toISOString().substring(0, 7);
@@ -145,12 +147,12 @@
             }, [presentToday, studentsWithIds]);
 
             useEffect(() => {
-                const unsub = db.collection('daily_attendance').doc(todayStr)
+                const unsub = db.collection('daily_attendance').doc(selectedDate)
                     .onSnapshot(doc => {
                         setPresentToday(doc.exists ? (doc.data().students || []) : []);
                     });
                 return () => unsub();
-            }, [todayStr]);
+            }, [selectedDate]);
 
             useEffect(() => {
                 if (view === 'summary') {
@@ -171,14 +173,14 @@
             }, [view, selectedMonth]);
 
             const toggleAttendance = async (studentId) => {
-                const docRef = db.collection('daily_attendance').doc(todayStr);
+                const docRef = db.collection('daily_attendance').doc(selectedDate);
                 const isPresent = presentToday.includes(studentId);
                 await docRef.set({
                     students: isPresent 
                         ? firebase.firestore.FieldValue.arrayRemove(studentId)
                         : firebase.firestore.FieldValue.arrayUnion(studentId),
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                    date: todayStr
+                    date: selectedDate
                 }, { merge: true });
             };
 
@@ -195,10 +197,10 @@
 
             const handleResetAttendance = async () => {
                 if (window.confirm("Pasti reset ke 0?")) {
-                    await db.collection('daily_attendance').doc(todayStr).set({
+                    await db.collection('daily_attendance').doc(selectedDate).set({
                         students: [],
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                        date: todayStr
+                        date: selectedDate
                     });
                 }
             };
@@ -212,7 +214,9 @@
 
             return (
                 <div className="min-h-screen pb-20">
-              <header className="canvas-header text-white px-5 pt-6 pb-4 shadow-xl no-print sticky top-0 z-50">
+                    
+                    {/* HEADER UTAMA DENGAN NAVIGASI */}
+                    <header className="canvas-header text-white px-5 pt-6 pb-4 shadow-xl no-print sticky top-0 z-50">
                         <div className="max-w-6xl mx-auto">
                             <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
                                 <div className="flex items-center gap-3">
@@ -246,14 +250,16 @@
                                 </div>
                             </div>
 
-                            {/* NAVIGASI VIEW DI BAWAH HEADER */}
-                            <div className="flex bg-black/20 p-1 rounded-xl max-w-sm mx-auto shadow-inner border border-white/5">
-                                <button onClick={() => setView('attendance')} className={`flex-1 py-2 rounded-lg font-black text-[10px] transition-all ${view==='attendance'?'bg-white text-[#002d5b] shadow-md':'text-white/60 hover:text-white'}`}>TANDA HADIR</button>
-                                <button onClick={() => setView('summary')} className={`flex-1 py-2 rounded-lg font-black text-[10px] transition-all ${view==='summary'?'bg-white text-[#002d5b] shadow-md':'text-white/60 hover:text-white'}`}>RUMUSAN & SEJARAH</button>
+                            {/* NAVIGASI PINDAH KE SINI (DI BAWAH HEADER) */}
+                            <div className="flex bg-black/20 p-1 rounded-xl max-w-md mx-auto shadow-inner border border-white/5">
+                                <button onClick={() => setView('attendance')} className={`flex-1 py-2.5 rounded-lg font-black text-[11px] transition-all ${view==='attendance'?'bg-white text-[#002d5b] shadow-md':'text-white/60 hover:text-white'}`}>TANDA HADIR</button>
+                                <button onClick={() => setView('summary')} className={`flex-1 py-2.5 rounded-lg font-black text-[11px] transition-all ${view==='summary'?'bg-white text-[#002d5b] shadow-md':'text-white/60 hover:text-white'}`}>RUMUSAN & SEJARAH</button>
                             </div>
                         </div>
-                    </header>      
+                    </header>
 
+                    <main className="max-w-6xl mx-auto px-4 mt-6">
+                        {/* SEARCH & CLASS SELECTOR */}
                         <div className="no-print mb-6 bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
                             <div className="flex flex-wrap justify-center gap-1.5 mb-4">
                                 {classes.map(c => (
@@ -302,7 +308,7 @@
                                                 <th className="py-3 px-2 text-[10px] font-black text-gray-400 uppercase">Bil</th>
                                                 <th className="py-3 px-2 text-[10px] font-black text-gray-400 uppercase">Nama</th>
                                                 <th className="py-3 px-2 text-center text-[10px] font-black text-gray-400 uppercase">Kehadiran</th>
-                                                <th className="py-3 px-2 text-right text-[10px] font-black text-gray-400 uppercase">Status Hari Ini</th>
+                                                <th className="py-3 px-2 text-right text-[10px] font-black text-gray-400 uppercase">Status {selectedDate}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
