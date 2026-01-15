@@ -12,12 +12,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .canvas-header { background-color: #002d5b; border-bottom: 5px solid #ff7a00; }
-        .student-card { transition: all 0.2s ease; cursor: pointer; }
-        .student-card:active { transform: scale(0.97); }
-        @media print { .no-print { display: none !important; } }
-    </style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    /* Added !important to ensure these colors overwrite everything else */
+    .canvas-header { 
+        background-color: #002d5b !important; 
+        border-bottom: 5px solid #ff7a00 !important; 
+    }
+    .student-card { transition: all 0.2s ease; cursor: pointer; }
+    .student-card:active { transform: scale(0.97); }
+    @media print { .no-print { display: none !important; } }
+</style>
 </head>
 <body>
     <div id="root"></div>
@@ -380,7 +384,21 @@
             );
         }, [activeClass, studentsWithIds, searchTerm]);
 
-        return (
+       const handleResetAttendance = async () => {
+    if (window.confirm("Peringatan: Adakah anda pasti mahu memadam SEMUA kehadiran hari ini?")) {
+        try {
+            await db.collection('daily_attendance').doc(todayStr).set({
+                students: [], // Setting this to an empty array resets count to 0
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                date: todayStr
+            });
+            alert("Sistem telah diset semula ke 0.");
+        } catch (err) {
+            console.error("Reset failed:", err);
+        }
+    }
+};
+          return (
             <div className="min-h-screen pb-20">
                 <header className="canvas-header text-white p-5 shadow-xl no-print sticky top-0 z-50">
                     <div className="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
